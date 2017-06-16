@@ -144,7 +144,7 @@ python () {
     install = d.getVar('do_install', False)
     python, shell = install.split('rm -f ', 1)
     # bits/syscall.h is in linux-libc-headers-external
-    shell = shell.replace('oe_multilib_header bits/syscall.h\n', '')
+    shell = shell.replace('oe_multilib_header bits/syscall.h bits/long-double.h\n', '')
     d.setVar('do_install_glibc', 'rm -f ' + shell)
     d.setVarFlag('do_install_glibc', 'func', '1')
     new_install = python + '\n    bb.build.exec_func("do_install_glibc", d)\n'
