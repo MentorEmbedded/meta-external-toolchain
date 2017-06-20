@@ -18,10 +18,10 @@ PREFERRED_PROVIDER_virtual/libintl ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libiconv ?= "glibc-external"
 PREFERRED_PROVIDER_gdbserver ??= "gdbserver-external"
 PREFERRED_PROVIDER_oprofile ??= "oprofile"
-# These are defined in default-providers.inc, which is parsed before the
-# tcmode, so we can't use ?= for them.
+
+# This is defined in default-providers.inc, which is parsed before the tcmode,
+# so we can't use ?=
 PREFERRED_PROVIDER_libgcc = "libgcc-external"
-PREFERRED_PROVIDER_linux-libc-headers = "linux-libc-headers-external"
 
 # Pass --no-sysroot-suffix when using an external toolchain with the SDK
 TOOLCHAIN_TARGET_TASK_append = " sdk-env-external-toolchain"

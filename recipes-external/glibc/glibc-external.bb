@@ -10,8 +10,7 @@ require recipes-core/glibc/glibc-common.inc
 inherit external-toolchain
 require recipes-external/glibc/glibc-external-version.inc
 
-DEPENDS += "virtual/${TARGET_PREFIX}binutils \
-            linux-libc-headers"
+DEPENDS += "virtual/${TARGET_PREFIX}binutils"
 PROVIDES += "glibc \
              virtual/${TARGET_PREFIX}libc-for-gcc \
              virtual/${TARGET_PREFIX}libc-initial \
@@ -143,8 +142,6 @@ python () {
     # Undo the do_install_append which joined shell to python
     install = d.getVar('do_install', False)
     python, shell = install.split('rm -f ', 1)
-    # bits/syscall.h is in linux-libc-headers-external
-    shell = shell.replace('oe_multilib_header bits/syscall.h bits/long-double.h\n', '')
     d.setVar('do_install_glibc', 'rm -f ' + shell)
     d.setVarFlag('do_install_glibc', 'func', '1')
     new_install = python + '\n    bb.build.exec_func("do_install_glibc", d)\n'
@@ -186,6 +183,9 @@ FILES_${PN}-dev_remove := "${datadir}/aclocal"
 
 FILES_${PN}-dev_remove = "/lib/*.o"
 FILES_${PN}-dev += "${libdir}/*crt*.o"
+
+linux_include_subdirs = "asm asm-generic bits drm linux mtd rdma sound sys video"
+FILES_${PN}-dev += "${@' '.join('${includedir}/%s' % d for d in '${linux_include_subdirs}'.split())}"
 
 libc_baselibs_dev += "${@' '.join('${libdir}/' + os.path.basename(l.replace('${SOLIBS}', '${SOLIBSDEV}')) for l in '${libc_baselibs}'.replace('${base_libdir}/ld*${SOLIBS}', '').split() if l.endswith('${SOLIBS}'))}"
 FILES_${PN}-staticdev = "\
