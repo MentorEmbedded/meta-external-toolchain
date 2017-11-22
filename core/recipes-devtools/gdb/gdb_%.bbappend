@@ -1,3 +1,5 @@
+PREFERRED_PROVIDER_gdbserver ?= "gdb"
+
 PROVIDES += "${@'gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' == '${PN}' else ''}"
 
 # Disable build of gdbserver if is provided by external-sourcery-toolchain
