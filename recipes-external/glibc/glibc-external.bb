@@ -125,6 +125,13 @@ glibc_external_do_install_extra () {
     sed -e '1s#bash#sh#' -i "${D}${bindir}/tzselect"
 }
 
+bberror_task-install () {
+    # Silence any errors from oe_multilib_header, as we don't care about
+    # missing multilib headers, as the oe-core glibc version isn't necessarily
+    # the same as our own.
+    :
+}
+
 EXTERNAL_EXTRA_FILES += "\
     ${bindir}/mtrace ${bindir}/xtrace ${bindir}/sotruss \
     ${datadir}/i18n \
