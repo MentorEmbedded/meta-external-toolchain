@@ -211,7 +211,7 @@ FILES_${PN}-dev += "\
 "
 libc_headers_file = "${@bb.utils.which('${FILESPATH}', 'libc.headers')}"
 FILES_${PN}-dev += "\
-    ${@' '.join('${includedir}/' + f.rstrip() for f in base_read_file('${libc_headers_file}').splitlines())} \
+    ${@' '.join('${includedir}/' + f.rstrip() for f in oe.utils.read_file('${libc_headers_file}').splitlines())} \
     ${includedir}/fpu_control.h \
     ${includedir}/stdc-predef.h \
     ${includedir}/uchar.h \
