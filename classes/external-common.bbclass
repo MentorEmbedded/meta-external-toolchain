@@ -1,4 +1,5 @@
 OE_IMPORTS += "oe.external"
+OE_IMPORTED := "${@oe_import(d)}"
 
 EXTERNAL_TOOLCHAIN_SYSROOT ?= "${@oe.external.run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-sysroot'])).rstrip()}"
 EXTERNAL_TOOLCHAIN_LIBROOT ?= "${@oe.external.run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-file-name=crtbegin.o'])).rstrip().replace('/crtbegin.o', '')}"
