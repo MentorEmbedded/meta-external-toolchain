@@ -74,6 +74,11 @@ LDEMULATION_x86-64 = "elf_${TARGET_ARCH}"
 LDEMULATION_x86-64_linux-gnux32 = "elf32_${TARGET_ARCH}"
 TUNE_LDARGS += "${@'-m ${LDEMULATION}' if '${LDEMULATION}' else ''}"
 
+# Additional search path for compiler component programs, to let us rebuild
+# components if necessary.
+gcc_bindir = "${STAGING_BINDIR_TOOLCHAIN}/gcc"
+TUNE_CCARGS += "-B${gcc_bindir}"
+
 python toolchain_metadata_setup () {
     # The external toolchain may not have been built with the yocto preferred
     # gnu hash setting, so ensure that the corresponding sanity check is a
