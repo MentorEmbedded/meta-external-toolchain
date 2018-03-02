@@ -34,7 +34,7 @@ python pnblacklist_dynamic_setup () {
             localdata.setVar('OVERRIDES', localdata.getVar('OVERRIDES', False) + override)
             bb.data.update_data(localdata)
 
-        to_blacklist |= set(filter(None, localdata.expand(blacklisted).split()))
+        to_blacklist |= set(filter(None, localdata.getVar('PNBLACKLIST_DYNAMIC').split()))
 
     for blrecipe in to_blacklist:
         d.setVarFlag('PNBLACKLIST', blrecipe, 'blacklisted by PNBLACKLIST_DYNAMIC')
