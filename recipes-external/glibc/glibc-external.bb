@@ -59,7 +59,7 @@ python adjust_locale_names () {
     """Align locale charset names with glibc-locale expectations."""
     # Read in supported locales and associated encodings
     supported = {}
-    with open(base_path_join(d.getVar('WORKDIR', True), "SUPPORTED")) as f:
+    with open(oe.path.join(d.getVar('WORKDIR', True), "SUPPORTED")) as f:
         for line in f.readlines():
             try:
                 locale, charset = line.rstrip().split()
