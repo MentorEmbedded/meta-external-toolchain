@@ -28,7 +28,12 @@ FILES_MIRRORS = "\
 
 def external_run(d, *args):
     """Convenience wrapper"""
-    oe_import(d)
+    if (not d.getVar('TCMODE', True).startswith('external') or
+            not d.getVar('EXTERNAL_TOOLCHAIN', True)):
+        return 'UNKNOWN'
+
+    sys.path.append(os.path.join(d.getVar('LAYERDIR_external-toolchain', True), 'lib'))
+    import oe.external
     return oe.external.run(d, *args)
 
 def external_get_kernel_version(p):
