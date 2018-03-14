@@ -16,7 +16,7 @@ PREFERRED_PROVIDER_glibc ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libc ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libintl ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libiconv ?= "glibc-external"
-PREFERRED_PROVIDER_gdbserver ??= "gdbserver-external"
+PREFERRED_PROVIDER_gdbserver ??= "gdb"
 PREFERRED_PROVIDER_oprofile ??= "oprofile"
 
 # This is defined in default-providers.inc, which is parsed before the tcmode,
