@@ -1,8 +1,7 @@
 PREFERRED_PROVIDER_gdbserver ?= "gdb"
-
-PROVIDES += "${@'gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' == '${PN}' else ''}"
+PROVIDES_append_tcmode-external = " ${@'gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' == '${PN}' else ''}"
 
 # Disable build of gdbserver if is provided by external-sourcery-toolchain
-PACKAGES := "${@oe.utils.str_filter_out('gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' != '${PN}' else '$', '${PACKAGES}', d)}"
-DISABLE_GDBSERVER := "${@'--disable-gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' != '${PN}' else ''}"
-EXTRA_OECONF += "${DISABLE_GDBSERVER}"
+PACKAGES_remove_tcmode-external = "${@'gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' != '${PN}' else ''}"
+DISABLE_GDBSERVER = "${@'--disable-gdbserver' if '${PREFERRED_PROVIDER_gdbserver}' != '${PN}' else ''}"
+EXTRA_OECONF_append_tcmode-external = " ${DISABLE_GDBSERVER}"
