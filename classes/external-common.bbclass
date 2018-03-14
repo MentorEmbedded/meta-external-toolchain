@@ -1,8 +1,8 @@
 OE_IMPORTS += "oe.external"
 OE_IMPORTED := "${@oe_import(d)}"
 
-EXTERNAL_TOOLCHAIN_SYSROOT ?= "${@oe.external.run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-sysroot'])).rstrip()}"
-EXTERNAL_TOOLCHAIN_LIBROOT ?= "${@oe.external.run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-file-name=crtbegin.o'])).rstrip().replace('/crtbegin.o', '')}"
+EXTERNAL_TOOLCHAIN_SYSROOT ?= "${@external_run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-sysroot'])).rstrip()}"
+EXTERNAL_TOOLCHAIN_LIBROOT ?= "${@external_run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-file-name=crtbegin.o'])).rstrip().replace('/crtbegin.o', '')}"
 EXTERNAL_LIBC_KERNEL_VERSION ?= "${@external_get_kernel_version("${EXTERNAL_TOOLCHAIN_SYSROOT}${prefix}")}"
 
 EXTERNAL_INSTALL_SOURCE_PATHS = "\

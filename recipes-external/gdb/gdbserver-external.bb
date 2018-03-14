@@ -1,12 +1,12 @@
 SUMMARY = "gdbserver is a program that allows you to run GDB on a different machine than the one which is running the program being debugged"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 SECTION = "devel"
-PV := "${@oe.external.run(d, 'gdb', '-v').splitlines()[0].split()[-1]}"
+PV := "${@external_run(d, 'gdb', '-v').splitlines()[0].split()[-1]}"
 
 inherit external-toolchain
 
 def get_gdb_license(d):
-    output = oe.external.run(d, 'gdb', '-v')
+    output = external_run(d, 'gdb', '-v')
     if output != 'UNKNOWN':
         for line in output.splitlines():
             if line.startswith('License '):
