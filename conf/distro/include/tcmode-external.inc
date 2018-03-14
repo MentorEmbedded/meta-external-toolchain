@@ -77,6 +77,10 @@ TUNE_LDARGS += "${@'-m ${LDEMULATION}' if '${LDEMULATION}' else ''}"
 gcc_bindir = "${STAGING_BINDIR_TOOLCHAIN}/gcc"
 TUNE_CCARGS += "-B${gcc_bindir}"
 
+TCMODEOVERRIDES = "tcmode-external"
+TCMODEOVERRIDES_append = ":tcmode-${TCMODE}"
+OVERRIDES =. "${TCMODEOVERRIDES}:"
+
 python toolchain_metadata_setup () {
     # The external toolchain may not have been built with the yocto preferred
     # gnu hash setting, so ensure that the corresponding sanity check is a
