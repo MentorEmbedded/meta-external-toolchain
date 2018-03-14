@@ -58,6 +58,9 @@ python () {
     if d.getVar('BB_WORKERCONTEXT', True) == '1':
         return
 
+    if not d.getVar('TCMODE', True).startswith('external'):
+        raise bb.parse.SkipPackage("External toolchain not configured (TCMODE not set to an external toolchain).")
+
     # We're not an available provider if there's no external toolchain
     if not d.getVar("EXTERNAL_TOOLCHAIN", True):
         raise bb.parse.SkipPackage("External toolchain not configured (EXTERNAL_TOOLCHAIN not set).")
