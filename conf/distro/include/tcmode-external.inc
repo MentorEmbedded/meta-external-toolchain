@@ -44,8 +44,6 @@ PNBLACKLIST[gcc-sanitizers] = "not building with an external toolchain"
 PNBLACKLIST[gcc-source] = "not building with an external toolchain"
 PNBLACKLIST[libgcc-initial] = "not building with an external toolchain"
 PNBLACKLIST[libgcc] = "not building with an external toolchain"
-PNBLACKLIST[linux-libc-headers] = "not building with an external toolchain"
-PNBLACKLIST[linux-libc-headers-yocto] = "not building with an external toolchain"
 
 PNBLACKLIST_DYNAMIC += "\
     ${MLPREFIX}gcc-cross-${TARGET_ARCH} \
