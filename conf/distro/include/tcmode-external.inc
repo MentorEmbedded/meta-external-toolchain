@@ -22,6 +22,10 @@ PREFERRED_PROVIDER_virtual/libiconv ?= "glibc-external"
 PREFERRED_PROVIDER_gdbserver ??= "gdb"
 PREFERRED_PROVIDER_oprofile ??= "oprofile"
 
+PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ??= "gcc-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ??= "binutils-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ??= "gdb-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+
 # This is defined in default-providers.inc, which is parsed before the tcmode,
 # so we can't use ?=
 PREFERRED_PROVIDER_libgcc = "libgcc-external"
