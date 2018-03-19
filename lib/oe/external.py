@@ -1,4 +1,5 @@
 import os.path
+import re
 import oe.path
 import bb
 
@@ -29,8 +30,8 @@ def get_file_search_metadata(d):
         entry = entry.strip()
         if not entry:
             continue
-        pattern, subst = entry.strip().split('|', 1)
-        mirrors.append(('^' + pattern, subst))
+        pathname, subst = entry.strip().split('|', 1)
+        mirrors.append(('^' + re.escape(pathname), subst))
 
     source_paths = [os.path.realpath(p)
                     for p in d.getVar('EXTERNAL_INSTALL_SOURCE_PATHS', True).split()]
