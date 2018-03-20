@@ -22,3 +22,27 @@ libexecdir = "${exec_prefix}/libexec"
 
 # We're relying on a compatible host libc, not one from a nativesdk build
 INSANE_SKIP_${PN} += "build-deps file-rdeps"
+
+do_install_append () {
+    for i in ${D}${bindir}/${EXTERNAL_TARGET_SYS}-*; do
+        if [ -e "$i" ]; then
+            j="$(basename "$i")"
+            ln -sv "$j" "${D}${bindir}/${TARGET_PREFIX}${j#${EXTERNAL_TARGET_SYS}-}"
+        fi
+    done
+}
+
+python add_files_links () {
+    prefix = d.getVar('EXTERNAL_TARGET_SYS') + '-'
+    full_prefix = os.path.join(d.getVar('bindir'), prefix)
+    new_prefix = d.getVar('TARGET_PREFIX')
+    for pkg in d.getVar('PACKAGES').split():
+        files = (d.getVar('FILES_%s' % pkg) or '').split()
+        new_files = []
+        for f in files:
+            if f.startswith(full_prefix):
+                new_files.append(f.replace(prefix, new_prefix))
+        if new_files:
+            d.appendVar('FILES_%s' % pkg, ' ' + ' '.join(new_files))
+}
+do_package[prefuncs] += "add_files_links"
