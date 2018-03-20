@@ -7,3 +7,5 @@ FILES_${PN} = "\
     ${libexecdir}/gcc/${EXTERNAL_TARGET_SYS} \
     ${@' '.join('${base_bindir}/${EXTERNAL_TARGET_SYS}-' + i for i in '${gcc_binaries}'.split())} \
 "
+
+INSANE_SKIP_${PN} += "dev-so staticdev"
