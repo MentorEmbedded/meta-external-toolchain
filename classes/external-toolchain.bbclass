@@ -118,13 +118,13 @@ python () {
             d.appendVarFlag('do_install', 'postfuncs', ' do_install_appended')
 }
 
-# Debug files are likely already split out
-INHIBIT_PACKAGE_STRIP = "1"
-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-
 # Toolchain shipped binaries weren't necessarily built ideally
 WARN_QA_remove = "ldflags textrel"
 ERROR_QA_remove = "ldflags textrel"
+
+# Debug files may well have already been split out, or stripped out
+WARN_QA_remove = "already-stripped"
+ERROR_QA_remove = "already-stripped"
 
 RPROVIDES_${PN} += "${EXTERNAL_PN}"
 RPROVIDES_${PN}-dev += "${EXTERNAL_PN}-dev"
