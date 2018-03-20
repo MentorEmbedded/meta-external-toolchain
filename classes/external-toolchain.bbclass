@@ -29,7 +29,7 @@ LICENSE = "CLOSED"
 LIC_FILES_CHKSUM = "${COMMON_LIC_CHKSUM}"
 
 # Packaging requires objcopy/etc for split and strip
-do_package[depends] += "virtual/${TARGET_PREFIX}binutils:do_populate_sysroot"
+PACKAGE_DEPENDS += "virtual/${TARGET_PREFIX}binutils"
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
@@ -162,8 +162,3 @@ def debug_paths(d):
     return set(paths)
 
 FILES_${PN}-dbg = "${@' '.join(debug_paths(d))}"
-
-# do_package[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-# do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-# do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-# do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
