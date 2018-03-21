@@ -5,6 +5,7 @@ inherit external-toolchain cross-canadian
 STRIP_task-package = "strip"
 STRIP_task-populate-sysroot = "strip"
 OBJCOPY_task-package = "objcopy"
+PACKAGE_DEPENDS_remove = "virtual/${TARGET_PREFIX}binutils"
 
 PN .= "-${TRANSLATED_TARGET_ARCH}"
 
