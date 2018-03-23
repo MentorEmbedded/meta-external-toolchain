@@ -1,6 +1,8 @@
 require recipes-external/gdb/gdb-external.inc
 inherit external-toolchain-cross-canadian
 
+PN .= "-${TRANSLATED_TARGET_ARCH}"
+
 FILES_MIRRORS =. "\
     ${exec_prefix}|${target_exec_prefix}/${EXTERNAL_TARGET_SYS}\n \
 "

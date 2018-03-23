@@ -1,6 +1,8 @@
 require recipes-external/binutils/binutils-external.inc
 inherit external-toolchain-cross-canadian
 
+PN .= "-${TRANSLATED_TARGET_ARCH}"
+
 FILES_${PN} = "\
     ${@' '.join('${bindir}/${EXTERNAL_TARGET_SYS}-' + i for i in '${binutils_binaries}'.split())} \
     ${@' '.join('${exec_prefix}/${EXTERNAL_TARGET_SYS}/bin/' + i for i in '${binutils_binaries}'.split())} \

@@ -7,8 +7,7 @@ STRIP_task-populate-sysroot = "strip"
 OBJCOPY_task-package = "objcopy"
 PACKAGE_DEPENDS_remove = "virtual/${TARGET_PREFIX}binutils"
 
-PN .= "-${TRANSLATED_TARGET_ARCH}"
-
+# Scan just toolchains root directory, but include some additional mirrors
 EXTERNAL_INSTALL_SOURCE_PATHS = "${EXTERNAL_TOOLCHAIN}"
 FILES_MIRRORS += "\
     ${bindir}/|/bin/\n \

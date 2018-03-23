@@ -1,6 +1,8 @@
 require recipes-external/gcc/gcc-external.inc
 inherit external-toolchain-cross-canadian
 
+PN .= "-${TRANSLATED_TARGET_ARCH}"
+
 BINV = "${GCC_VERSION}"
 
 RDEPENDS_${PN} = "binutils-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
