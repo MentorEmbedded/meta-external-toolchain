@@ -53,6 +53,11 @@ EXTERNAL_TOOLCHAIN[vardepvalue] = "${EXTERNAL_TOOLCHAIN}"
 external_toolchain_do_install[vardepsexclude] += "EXTERNAL_TOOLCHAIN"
 EXTERNAL_INSTALL_SOURCE_PATHS[vardepsexclude] += "EXTERNAL_TOOLCHAIN"
 
+# Propagate file permissions mode from owner to the rest of the user
+# so the toolchain bits would be available for everyone to use even in the
+# directories with root permissions.
+EXTERNAL_PROPAGATE_MODE ?= "0"
+
 python () {
     # Skipping only matters up front
     if d.getVar('BB_WORKERCONTEXT', True) == '1':
@@ -88,6 +93,28 @@ python do_install () {
     pass # Sentinel
 }
 
+def external_toolchain_propagate_mode (d, installdest):
+    import stat
+
+    propagate = d.getVar('EXTERNAL_PROPAGATE_MODE', True)
+    if propagate == '0':
+        return
+
+    for root, dirs, files in os.walk(installdest):
+        for bit in dirs + files:
+            path = os.path.join(root, bit)
+            try:
+                bitstat = os.stat(path)
+            except ValueError:
+                continue
+            else:
+                newmode = bitstat.st_mode
+                if bitstat.st_mode & stat.S_IRUSR:
+                    newmode |= stat.S_IRGRP | stat.S_IROTH
+                if bitstat.st_mode & stat.S_IXUSR:
+                    newmode |= stat.S_IXGRP | stat.S_IXOTH
+                os.chmod(path, newmode)
+
 python external_toolchain_do_install () {
     import subprocess
     installdest = d.getVar('D', True)
@@ -96,6 +123,7 @@ python external_toolchain_do_install () {
     oe.external.copy_from_sysroots(files, sysroots, mirrors, installdest)
     if 'do_install_extra' in d:
         bb.build.exec_func('do_install_extra', d)
+    external_toolchain_propagate_mode(d, installdest)
     subprocess.check_call(['chown', '-R', 'root:root', installdest])
 }
 external_toolchain_do_install[vardeps] += "${@' '.join('FILES_%s' % pkg for pkg in '${PACKAGES}'.split())}"
