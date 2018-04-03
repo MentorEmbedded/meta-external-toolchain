@@ -53,6 +53,10 @@ PNBLACKLIST_DYNAMIC += "\
     ${MLPREFIX}gcc-cross-${TARGET_ARCH} \
     ${MLPREFIX}gcc-cross-initial-${TARGET_ARCH} \
     \
+    binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    \
     gcc-source-${@'${GCCVERSION}'.replace('%', '')} \
 "
 
