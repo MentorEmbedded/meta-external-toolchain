@@ -10,4 +10,4 @@ PROVIDES += "\
     virtual/${TARGET_PREFIX}g++ \
 "
 
-EXTERNAL_CROSS_BINARIES = "${@'${gcc_binaries}'.replace('${TARGET_PREFIX}', '')}"
+EXTERNAL_CROSS_BINARIES = "${gcc_binaries}"
