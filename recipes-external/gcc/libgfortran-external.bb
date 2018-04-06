@@ -13,13 +13,14 @@ FILES_MIRRORS =. "${libdir}/gcc/${TARGET_SYS}/${GCC_VERSION}/|${external_libroot
 
 EXTERNAL_PROVIDE_PATTERN = "${FILES_${PN}}"
 
+# We don't copy the static binaries and headers, since they don't belong to the
+# target sysroot, but need to be in the native one (that's the place where compiler
+# and linker are looking for them).
 FILES_${PN} = "${libdir}/libgfortran.so.*"
 FILES_${PN}-dev = "\
     ${libdir}/libgfortran*.so \
     ${libdir}/libgfortran.spec \
     ${libdir}/libgfortran.la \
-    ${libdir}/gcc/${TARGET_SYS}/${GCC_VERSION}/libgfortranbegin.* \
-    ${libdir}/gcc/${TARGET_SYS}/${GCC_VERSION}/libcaf_single* \
 "
 FILES_${PN}-staticdev = "${libdir}/libgfortran.a"
 
