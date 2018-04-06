@@ -7,6 +7,7 @@ RDEPENDS_${PN} = "binutils-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 FILES_${PN} = "\
     ${libdir}/gcc/${EXTERNAL_TARGET_SYS}/${BINV} \
     ${libexecdir}/gcc/${EXTERNAL_TARGET_SYS}/${BINV} \
+    ${libdir}/libcc1* \
     ${@' '.join('${base_bindir}/${EXTERNAL_TARGET_SYS}-' + i for i in '${gcc_binaries}'.split())} \
 "
 
