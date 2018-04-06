@@ -3,8 +3,6 @@ HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
 PV = "${GCC_VERSION}"
 
-inherit external-toolchain
-
 gcc_binaries = "\
     ${TARGET_PREFIX}gcc \
     ${TARGET_PREFIX}gcc-${@'${PV}'.replace('${EXTERNAL_PV_SUFFIX}', '')} \
