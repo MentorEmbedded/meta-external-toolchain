@@ -1,7 +1,6 @@
 SUMMARY = "The GNU Compiler Collection - libgfortran"
 HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
-GCC_VERSION := "${@external_run(d, 'gcc', '-dumpversion').rstrip()}"
 PV = "${GCC_VERSION}"
 
 inherit external-toolchain
