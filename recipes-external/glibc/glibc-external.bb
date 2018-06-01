@@ -172,7 +172,6 @@ FILES_${PN}-utils = "\
     ${bindir}/makedb \
     ${bindir}/pcprofiledump \
     ${bindir}/pldd \
-    ${bindir}/rpcgen \
     ${bindir}/sprof \
 "
 FILES_${PN}-doc += "${infodir}/libc.info*"
@@ -200,7 +199,6 @@ FILES_${PN}-staticdev = "\
     ${libdir}/libg.a \
     ${libdir}/libieee.a \
     ${libdir}/libmcheck.a \
-    ${libdir}/librpcsvc.a \
 "
 
 FILES_${PN}-dev += "\
