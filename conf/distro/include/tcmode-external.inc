@@ -100,6 +100,3 @@ GCC_VERSION_allarch = ""
 GCC_VERSION[vardepvalue] = "${GCC_VERSION}"
 
 BUILDCFG_VARS += "EXTERNAL_TOOLCHAIN EXTERNAL_TARGET_SYS GCC_VERSION"
-
-# Use -Wl,--as-needed
-require conf/distro/include/as-needed.inc
