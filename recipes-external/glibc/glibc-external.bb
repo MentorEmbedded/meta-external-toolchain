@@ -16,7 +16,8 @@ PROVIDES += "glibc \
              virtual/${TARGET_PREFIX}libc-initial \
              virtual/libc \
              virtual/libintl \
-             virtual/libiconv"
+             virtual/libiconv \
+             virtual/crypt"
 
 def get_external_libc_license(d):
     errnosearch = os.path.join(d.getVar('includedir', True), 'errno.h')
