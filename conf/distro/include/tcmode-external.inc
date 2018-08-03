@@ -20,7 +20,12 @@ PREFERRED_PROVIDER_virtual/libc ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libintl ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libiconv ?= "glibc-external"
 PREFERRED_PROVIDER_gdbserver ??= "gdb"
+PREFERRED_PROVIDER_gdb-cross-${TARGET_ARCH} ?= "gdb-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_oprofile ??= "oprofile"
+
+PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ??= "gcc-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ??= "binutils-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ??= "gdb-external-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 # This is defined in default-providers.inc, which is parsed before the tcmode,
 # so we can't use ?=
@@ -52,6 +57,10 @@ PNBLACKLIST[libgfortran] = "not building with an external toolchain"
 PNBLACKLIST_DYNAMIC += "\
     ${MLPREFIX}gcc-cross-${TARGET_ARCH} \
     ${MLPREFIX}gcc-cross-initial-${TARGET_ARCH} \
+    \
+    binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+    gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
     \
     gcc-source-${@'${GCCVERSION}'.replace('%', '')} \
 "
