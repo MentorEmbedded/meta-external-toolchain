@@ -1,4 +1,3 @@
-GCC_VERSION := "${@external_run(d, 'gcc', '-dumpversion').rstrip()}"
 PV = "${GCC_VERSION}"
 BINV = "${GCC_VERSION}"
 

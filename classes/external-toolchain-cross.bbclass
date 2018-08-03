@@ -1,7 +1,6 @@
 inherit external-toolchain cross
 
 EXTERNAL_CROSS_BINARIES ?= ""
-EXTERNAL_CROSS_NOPSEUDO = "gcc g++ cpp"
 
 wrap_bin () {
     bin="$1"
@@ -22,18 +21,6 @@ do_install () {
             continue
         fi
 
-        disable=0
-        for nopseudo in ${EXTERNAL_CROSS_NOPSEUDO}; do
-            case "$bin" in
-                *$nopseudo)
-                    disable=1
-                    ;;
-            esac
-        done
-        if [ $disable -eq 1 ]; then
-            wrap_bin "$bin" "export PSEUDO_UNLOAD=1"
-        else
-            wrap_bin "$bin"
-        fi
+        wrap_bin "$bin"
     done
 }

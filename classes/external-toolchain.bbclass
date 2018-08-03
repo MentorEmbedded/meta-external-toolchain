@@ -29,7 +29,7 @@ LICENSE = "CLOSED"
 LIC_FILES_CHKSUM = "${COMMON_LIC_CHKSUM}"
 
 # Packaging requires objcopy/etc for split and strip
-do_package[depends] += "virtual/${TARGET_PREFIX}binutils:do_populate_sysroot"
+PACKAGE_DEPENDS += "virtual/${TARGET_PREFIX}binutils"
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
@@ -52,6 +52,11 @@ EXTERNAL_TOOLCHAIN[vardepvalue] = "${EXTERNAL_TOOLCHAIN}"
 # toolchain changes
 external_toolchain_do_install[vardepsexclude] += "EXTERNAL_TOOLCHAIN"
 EXTERNAL_INSTALL_SOURCE_PATHS[vardepsexclude] += "EXTERNAL_TOOLCHAIN"
+
+# Propagate file permissions mode from owner to the rest of the user
+# so the toolchain bits would be available for everyone to use even in the
+# directories with root permissions.
+EXTERNAL_PROPAGATE_MODE ?= "0"
 
 python () {
     # Skipping only matters up front
@@ -88,6 +93,28 @@ python do_install () {
     pass # Sentinel
 }
 
+def external_toolchain_propagate_mode (d, installdest):
+    import stat
+
+    propagate = d.getVar('EXTERNAL_PROPAGATE_MODE', True)
+    if propagate == '0':
+        return
+
+    for root, dirs, files in os.walk(installdest):
+        for bit in dirs + files:
+            path = os.path.join(root, bit)
+            try:
+                bitstat = os.stat(path)
+            except ValueError:
+                continue
+            else:
+                newmode = bitstat.st_mode
+                if bitstat.st_mode & stat.S_IRUSR:
+                    newmode |= stat.S_IRGRP | stat.S_IROTH
+                if bitstat.st_mode & stat.S_IXUSR:
+                    newmode |= stat.S_IXGRP | stat.S_IXOTH
+                os.chmod(path, newmode)
+
 python external_toolchain_do_install () {
     import subprocess
     installdest = d.getVar('D', True)
@@ -96,6 +123,7 @@ python external_toolchain_do_install () {
     oe.external.copy_from_sysroots(files, sysroots, mirrors, installdest)
     if 'do_install_extra' in d:
         bb.build.exec_func('do_install_extra', d)
+    external_toolchain_propagate_mode(d, installdest)
     subprocess.check_call(['chown', '-R', 'root:root', installdest])
 }
 external_toolchain_do_install[vardeps] += "${@' '.join('FILES_%s' % pkg for pkg in '${PACKAGES}'.split())}"
@@ -118,13 +146,13 @@ python () {
             d.appendVarFlag('do_install', 'postfuncs', ' do_install_appended')
 }
 
-# Debug files are likely already split out
-INHIBIT_PACKAGE_STRIP = "1"
-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-
 # Toolchain shipped binaries weren't necessarily built ideally
 WARN_QA_remove = "ldflags textrel"
 ERROR_QA_remove = "ldflags textrel"
+
+# Debug files may well have already been split out, or stripped out
+WARN_QA_remove = "already-stripped"
+ERROR_QA_remove = "already-stripped"
 
 RPROVIDES_${PN} += "${EXTERNAL_PN}"
 RPROVIDES_${PN}-dev += "${EXTERNAL_PN}-dev"
@@ -162,8 +190,3 @@ def debug_paths(d):
     return set(paths)
 
 FILES_${PN}-dbg = "${@' '.join(debug_paths(d))}"
-
-# do_package[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-# do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-# do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-# do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"

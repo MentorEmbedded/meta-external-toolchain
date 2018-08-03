@@ -15,5 +15,7 @@ EXTERNAL_CROSS_BINARIES = "ar as ld nm objcopy objdump ranlib strip \
                            strings"
 
 do_install_append () {
-    ln -s ${TARGET_PREFIX}ld ${D}${bindir}/${TARGET_PREFIX}ld.bfd
+    if [ ! -e ${D}${bindir}/${TARGET_PREFIX}ld.bfd ]; then
+        ln -s ${TARGET_PREFIX}ld ${D}${bindir}/${TARGET_PREFIX}ld.bfd
+    fi
 }
