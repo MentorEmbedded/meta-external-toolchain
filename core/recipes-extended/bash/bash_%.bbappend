@@ -1,3 +1,5 @@
 do_compile_append () {
-    sed -i -e 's#-B${gcc_bindir}##' support/bash.pc
+    if [ -e support/bash.pc ] ; then
+        sed -i -e 's#-B${gcc_bindir}##' support/bash.pc
+    fi
 }
