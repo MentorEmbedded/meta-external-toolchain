@@ -30,7 +30,10 @@ def get_file_search_metadata(d):
         entry = entry.strip()
         if not entry:
             continue
-        pathname, subst = entry.strip().split('|', 1)
+        try:
+            pathname, subst = entry.strip().split('|', 1)
+        except ValueError:
+            bb.warn('Invalid FILES_MIRRORS entry: {0}'.format(entry))
         mirrors.append(('^' + re.escape(pathname), subst))
 
     source_paths = [os.path.realpath(p)

@@ -1,5 +1,49 @@
-OE_IMPORTS += "oe.external"
-OE_IMPORTED := "${@oe_import(d)}"
+def fixed_oe_import(d, modules=None):
+    import importlib
+    import sys
+
+    def inject(name, value):
+        """Make a python object accessible from the metadata"""
+        if hasattr(bb.utils, "_context"):
+            bb.utils._context[name] = value
+        else:
+            __builtins__[name] = value
+
+    bbpath = d.getVar("BBPATH").split(":")
+    layerpaths = [os.path.join(dir, "lib") for dir in bbpath]
+    sys.path[0:0] = layerpaths
+
+    if modules is None:
+        import oe.data
+        modules = oe.data.typed_value("OE_IMPORTS", d)
+
+    has_reloaded = set()
+    for toimport in modules:
+        # If we're importing something in a namespace package, and it's
+        # already been imported, reload it, to ensure any namespace package
+        # extensions to __path__ are picked up
+        imp_project = toimport
+        while True:
+            try:
+                imp_project, _ = imp_project.rsplit(".", 1)
+            except ValueError:
+                break
+            if imp_project in sys.modules and imp_project not in has_reloaded:
+                mod = sys.modules[imp_project]
+                if hasattr(mod, '__path__'):
+                    bb.debug(1, 'Reloading %s' % imp_project)
+                    importlib.reload(mod)
+                    has_reloaded.add(imp_project)
+
+        project = toimport.split(".", 1)[0]
+        imported = importlib.import_module(toimport)
+        sys.modules[toimport] = imported
+        inject(project, sys.modules[project])
+        bb.debug(1, 'Imported and injected %s' % toimport)
+
+    return ""
+
+EXTERNAL_IMPORTED := "${@fixed_oe_import(d, ['oe.external'])}"
 
 EXTERNAL_TOOLCHAIN_SYSROOT ?= "${@external_run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-sysroot'])).rstrip()}"
 EXTERNAL_TOOLCHAIN_LIBROOT ?= "${@external_run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-file-name=crtbegin.o'])).rstrip().replace('/crtbegin.o', '')}"

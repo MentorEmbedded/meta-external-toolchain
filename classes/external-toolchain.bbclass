@@ -29,7 +29,7 @@ LICENSE = "CLOSED"
 LIC_FILES_CHKSUM = "${COMMON_LIC_CHKSUM}"
 
 # Packaging requires objcopy/etc for split and strip
-PACKAGE_DEPENDS += "virtual/${TARGET_PREFIX}binutils"
+PACKAGE_DEPENDS += "virtual/${MLPREFIX}${TARGET_PREFIX}binutils"
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
