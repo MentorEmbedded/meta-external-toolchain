@@ -4,12 +4,10 @@ EXTERNAL_TARGET_SYS ??= "${TARGET_ARCH}-${TARGET_OS}"
 
 # Prefer our recipes which extract files from the external toolchain
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc ?= "gcc-external-cross-${TARGET_ARCH}"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial ?= "gcc-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate ?= "gcc-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ ?= "gcc-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils ?= "binutils-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs ?= "gcc-runtime-external"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-initial ?= "glibc-external"
 PREFERRED_PROVIDER_gcc-runtime = "gcc-runtime-external"
 PREFERRED_PROVIDER_gcc-sanitizers ?= "gcc-sanitizers-external"
 PREFERRED_PROVIDER_libgcc-initial = "libgcc-external"
@@ -42,9 +40,7 @@ INHERIT += "external-common"
 # Ensure that we don't pull in any internal toolchain recipes
 INHERIT += "blacklist blacklist_dynamic"
 PNBLACKLIST[uclibc] = "not building with an external toolchain"
-PNBLACKLIST[uclibc-initial] = "not building with an external toolchain"
 PNBLACKLIST[glibc] = "not building with an external toolchain"
-PNBLACKLIST[glibc-initial] = "not building with an external toolchain"
 PNBLACKLIST[glibc-intermediate] = "not building with an external toolchain"
 PNBLACKLIST[gcc-runtime] = "not building with an external toolchain"
 PNBLACKLIST[gcc-sanitizers] = "not building with an external toolchain"
@@ -55,7 +51,6 @@ PNBLACKLIST[libgfortran] = "not building with an external toolchain"
 
 PNBLACKLIST_DYNAMIC += "\
     ${MLPREFIX}gcc-cross-${TARGET_ARCH} \
-    ${MLPREFIX}gcc-cross-initial-${TARGET_ARCH} \
     \
     binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
     gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
