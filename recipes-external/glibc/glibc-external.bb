@@ -1,9 +1,12 @@
 SRC_URI = "\
     file://SUPPORTED \
+    file://makedbs.sh \
     file://nscd.init;subdir=${REL_S}/nscd \
     file://nscd.conf;subdir=${REL_S}/nscd \
     file://nscd.service;subdir=${REL_S}/nscd \
 "
+# For makedbs.sh
+FILESPATH .= ":${COREBASE}/meta/recipes-core/glibc/glibc"
 REL_S = "${@os.path.relpath('${S}', '${WORKDIR}')}"
 
 require recipes-core/glibc/glibc-common.inc
