@@ -44,6 +44,8 @@ LICENSE := "${@get_external_libc_license(d)}"
 require recipes-external/glibc/glibc-sysroot-setup.inc
 require recipes-external/glibc/glibc-package-adjusted.inc
 
+libc_baselibs += "${base_libdir}/libcrypt*.so.* ${base_libdir}/libcrypt-*.so"
+
 FILES_MIRRORS .= "\
     ${base_sbindir}/|/usr/bin/ \n\
     ${base_sbindir}/|/usr/${baselib}/bin/ \n\
