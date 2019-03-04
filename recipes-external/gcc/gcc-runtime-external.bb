@@ -58,4 +58,5 @@ FILES_libgomp-dev += "\
 "
 BBCLASSEXTEND = ""
 
-do_package[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
+RDEPENDS_libatomic += "${TCLIBC}"
+RDEPENDS_libssp += "${TCLIBC}"
