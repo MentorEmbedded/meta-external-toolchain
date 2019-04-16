@@ -59,4 +59,5 @@ FILES_libgomp-dev += "\
 BBCLASSEXTEND = ""
 
 RDEPENDS_libatomic += "${TCLIBC}"
+RDEPENDS_libgomp += "${TCLIBC}"
 RDEPENDS_libssp += "${TCLIBC}"
