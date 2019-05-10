@@ -1,4 +1,3 @@
-PREFERRED_PROVIDER_${MLPREFIX}gdbserver ?= "${MLPREFIX}gdb"
 PROVIDES_append_tcmode-external = " ${@'gdbserver' if '${PREFERRED_PROVIDER_${MLPREFIX}gdbserver}' == '${PN}' else ''}"
 
 # Disable build of gdbserver if is provided by external-sourcery-toolchain

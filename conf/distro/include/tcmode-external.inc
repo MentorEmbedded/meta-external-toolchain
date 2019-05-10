@@ -19,7 +19,7 @@ PREFERRED_PROVIDER_virtual/libiconv ?= "glibc-external"
 PREFERRED_PROVIDER_oprofile ??= "oprofile"
 # Work around bug where the implicitly created mlprefix preference isn't being
 # obeyed for the runtime package installation.
-PREFERRED_PROVIDER_${MLPREFIX}gdbserver ??= "${MLPREFIX}gdb"
+PREFERRED_PROVIDER_${MLPREFIX}gdbserver ?= "${MLPREFIX}gdb"
 
 # This is defined in default-providers.inc, which is parsed before the tcmode,
 # so we can't use ?=
