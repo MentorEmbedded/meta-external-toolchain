@@ -24,5 +24,5 @@ FILES_${PN}-doc = "${mandir}/man1/gdbserver.1"
 # Ensure that our rdeps are able to be set by shlibs processing
 do_package[depends] += "\
     virtual/libc:do_packagedata \
-    virtual/${TARGET_PREFIX}compilerlibs:do_packagedata \
+    virtual/${MLPREFIX}${TARGET_PREFIX}compilerlibs:do_packagedata \
 "
