@@ -11,6 +11,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs ?= "gcc-runtime-external
 PREFERRED_PROVIDER_gcc-runtime = "gcc-runtime-external"
 PREFERRED_PROVIDER_gcc-sanitizers ?= "gcc-sanitizers-external"
 PREFERRED_PROVIDER_libgcc-initial = "libgcc-external"
+PREFERRED_PROVIDER_libnsl2 = "libnsl2-external"
 PREFERRED_PROVIDER_libgfortran = "libgfortran-external"
 PREFERRED_PROVIDER_glibc ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libc ?= "glibc-external"
