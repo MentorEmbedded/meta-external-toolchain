@@ -218,7 +218,7 @@ FILES_${PN}-dev += "\
     ${includedir}/stdc-predef.h \
     ${includedir}/uchar.h \
 "
-FILES_${PN}-dev[file-checksums] += "${libc_headers_file}"
+FILES_${PN}-dev[file-checksums] += "${libc_headers_file}:True"
 
 # glibc's utils need libgcc
 do_package[depends] += "${MLPREFIX}libgcc:do_packagedata"
