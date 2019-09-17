@@ -88,7 +88,7 @@ python () {
         raise bb.parse.SkipPackage('No files found in external toolchain sysroot for: {}'.format(', '.join(search_patterns)))
 }
 
-python do_install () {
+fakeroot python do_install () {
     bb.build.exec_func('external_toolchain_do_install', d)
     pass # Sentinel
 }
@@ -124,7 +124,6 @@ python external_toolchain_do_install () {
     if 'do_install_extra' in d:
         bb.build.exec_func('do_install_extra', d)
     external_toolchain_propagate_mode(d, installdest)
-    subprocess.check_call(['chown', '-R', 'root:root', installdest])
 }
 external_toolchain_do_install[vardeps] += "${@' '.join('FILES_%s' % pkg for pkg in '${PACKAGES}'.split())}"
 

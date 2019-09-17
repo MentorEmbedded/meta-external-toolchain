@@ -66,7 +66,7 @@ def copy_from_sysroots(pathnames, sysroots, mirrors, installdest):
         else:
             destdir = oe.path.join(installdest, os.path.dirname(path))
             bb.utils.mkdirhier(destdir)
-            subprocess.check_call(['cp', '-pPR'] + list(files) + [destdir + '/'])
+            subprocess.check_call(['cp', '-PR', '--preserve=mode,timestamps', '--no-preserve=ownership'] + list(files) + [destdir + '/'])
             bb.note('Copied `{}`  to `{}/`'.format(', '.join(files), destdir))
 
 def expand_paths(pathnames, mirrors):
