@@ -11,7 +11,7 @@ SECTION = "libs"
 inherit external-toolchain
 
 FILES_${PN} = "${libdir}/libnsl*.so.* ${libdir}/libnsl-*.so"
-FILES_${PN}-dev = "${libdir}/libnsl.so ${includedir}/rpcsvc"
+FILES_${PN}-dev = "${libdir}/libnsl.so ${includedir}/rpcsvc/nis*.h ${includedir}/rpcsvc/yp*.h"
 FILES_${PN}-staticdev = "${libdir}/libnsl.a"
 
 libc_rdep = "${@'${PREFERRED_PROVIDER_virtual/libc}' if '${PREFERRED_PROVIDER_virtual/libc}' else '${TCLIBC}'}"
