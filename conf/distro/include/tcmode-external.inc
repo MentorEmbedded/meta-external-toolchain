@@ -84,9 +84,9 @@ LDEMULATION_x86-64_linux-gnux32 = "elf32_${TARGET_ARCH}"
 TUNE_LDARGS += "${@'-m ${LDEMULATION}' if '${LDEMULATION}' else ''}"
 
 # Additional search path for compiler component programs, to let us rebuild
-# components if necessary.
+# binutils if necessary.
 gcc_bindir = "${STAGING_BINDIR_TOOLCHAIN}/gcc"
-TUNE_CCARGS += "-B${gcc_bindir}"
+TUNE_CCARGS .= "${@' -B${gcc_bindir}' if d.getVar('PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils') != 'binutils-external-cross-${TARGET_ARCH}' else ''}"
 
 TCMODEOVERRIDES = "tcmode-external"
 TCMODEOVERRIDES_append = ":tcmode-${TCMODE}"
