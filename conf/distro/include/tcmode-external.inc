@@ -1,6 +1,7 @@
 # Configuration to use external Sourcery G++ toolchain
 EXTERNAL_TOOLCHAIN ?= "UNDEFINED"
 EXTERNAL_TARGET_SYS ??= "${TARGET_ARCH}-${TARGET_OS}"
+EXTERNAL_TOOLCHAIN_BIN ??= "${EXTERNAL_TOOLCHAIN}/bin"
 
 # Prefer our recipes which extract files from the external toolchain
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc ?= "gcc-external-cross-${TARGET_ARCH}"

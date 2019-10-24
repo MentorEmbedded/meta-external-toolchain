@@ -23,15 +23,15 @@ def check_toolchain_sanity(d, generate_events=False):
 
     # Test 2: EXTERNAL_TARGET_SYS is set correctly
     if d.getVar('EXTERNAL_TARGET_SYS', True) == 'UNKNOWN':
-        raise_exttc_sanity_error('Unable to locate prefixed gcc binary for %s in EXTERNAL_TOOLCHAIN/bin (%s/bin)' % (d.getVar('TARGET_SYS', True), d.getVar('EXTERNAL_TOOLCHAIN', True)), d, generate_events)
+        raise_exttc_sanity_error('Unable to locate prefixed gcc binary for %s in EXTERNAL_TOOLCHAIN_BIN (%s)' % (d.getVar('TARGET_SYS', True), d.getVar('EXTERNAL_TOOLCHAIN_BIN', True)), d, generate_events)
 
     # Test 3: gcc binary exists
-    gcc = d.expand('${EXTERNAL_TOOLCHAIN}/bin/${EXTERNAL_TARGET_SYS}-gcc')
+    gcc = d.expand('${EXTERNAL_TOOLCHAIN_BIN}/${EXTERNAL_TARGET_SYS}-gcc')
     if not os.path.exists(gcc):
         raise_exttc_sanity_error('Compiler path `%s` does not exist' % gcc, d, generate_events)
 
     # Test 4: we can run it to get the version
-    cmd = d.expand('${EXTERNAL_TOOLCHAIN}/bin/${EXTERNAL_TARGET_SYS}-gcc -dumpversion')
+    cmd = d.expand('${EXTERNAL_TOOLCHAIN_BIN}/${EXTERNAL_TARGET_SYS}-gcc -dumpversion')
     sourcery_version = exttc_sanity_run(shlex.split(cmd), d, generate_events)
     if cfgdata.get('sourcery_version') == sourcery_version:
         return
@@ -48,7 +48,7 @@ def check_toolchain_sanity(d, generate_events=False):
         l.setVar('TOOLCHAIN_OPTIONS', '')
         l.setVar('TARGET_PREFIX', '${EXTERNAL_TARGET_SYS}-')
         l.setVar('HOST_CC_ARCH_remove', '--no-sysroot-suffix')
-        cmd = l.expand('${EXTERNAL_TOOLCHAIN}/bin/${CC} ${CFLAGS} ${LDFLAGS} test.c -o test')
+        cmd = l.expand('${EXTERNAL_TOOLCHAIN_BIN}/${CC} ${CFLAGS} ${LDFLAGS} test.c -o test')
         exttc_sanity_run(shlex.split(cmd), d, generate_events, tmpdir)
 
     with open(sanity_file, 'w') as f:
