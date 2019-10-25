@@ -17,7 +17,9 @@ DEPENDS = "virtual/${TARGET_PREFIX}binutils"
 PROVIDES += "glibc \
              virtual/libc \
              virtual/libintl \
-             virtual/libiconv"
+             virtual/libiconv \
+             linux-libc-headers \
+             linux-libc-headers-dev"
 
 def get_external_libc_license(d):
     errnosearch = os.path.join(d.getVar('includedir', True), 'errno.h')
