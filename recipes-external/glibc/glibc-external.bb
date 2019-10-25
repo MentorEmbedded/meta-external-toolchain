@@ -13,7 +13,7 @@ require recipes-core/glibc/glibc-common.inc
 inherit external-toolchain
 require recipes-external/glibc/glibc-external-version.inc
 
-DEPENDS += "virtual/${TARGET_PREFIX}binutils"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils"
 PROVIDES += "glibc \
              virtual/libc \
              virtual/libintl \
@@ -234,6 +234,10 @@ do_package_write_rpm[depends] += "${MLPREFIX}libgcc:do_packagedata"
 
 # glibc may need libssp for -fstack-protector builds
 do_packagedata[depends] += "gcc-runtime:do_packagedata"
+
+# We don't need linux-libc-headers
+LINUX_LIBC_RDEP_REMOVE ?= "linux-libc-headers-dev"
+RDEPENDS_${PN}-dev_remove = "${LINUX_LIBC_RDEP_REMOVE}"
 
 FILES_${PN}-dev_remove = "${base_libdir}/*_nonshared.a ${libdir}/*_nonshared.a"
 FILES_${PN}-dev += "${libdir}/libc_nonshared.a ${libdir}/libpthread_nonshared.a ${libdir}/libmvec_nonshared.a"
