@@ -57,6 +57,7 @@ python do_install () {
     bb.build.exec_func('external_toolchain_do_install', d)
     bb.build.exec_func('glibc_external_do_install_extra', d)
     bb.build.exec_func('adjust_locale_names', d)
+    # sentinel
 }
 
 python adjust_locale_names () {
@@ -152,8 +153,8 @@ do_install_locale_append() {
 python () {
     # Undo the do_install_append which joined shell to python
     install = d.getVar('do_install', False)
-    python, shell = install.split('rm -f ', 1)
-    d.setVar('do_install_glibc', 'rm -f ' + shell)
+    python, shell = install.split('# sentinel', 1)
+    d.setVar('do_install_glibc', shell)
     d.setVarFlag('do_install_glibc', 'func', '1')
     new_install = python + '\n    bb.build.exec_func("do_install_glibc", d)\n'
     d.setVar('do_install', new_install.replace('\t', '    '))
