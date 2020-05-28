@@ -9,4 +9,4 @@ def get_external_libc_version(d):
 
     return 'UNKNOWN'
 
-PV := "${@get_external_libc_version(d)}"
+PV_tcmode-external := "${@get_external_libc_version(d)}"
