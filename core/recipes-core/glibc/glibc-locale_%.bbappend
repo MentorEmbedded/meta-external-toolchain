@@ -8,6 +8,7 @@ ERROR_QA_remove = "ldflags textrel"
 INSANE_SKIP_${PN} += "already-stripped"
 
 # localedef needs libgcc & libc
+localedef_depends = ""
 localedef_depends_tcmode-external = "${MLPREFIX}libgcc:do_packagedata virtual/${MLPREFIX}libc:do_packagedata"
 
 python () {
