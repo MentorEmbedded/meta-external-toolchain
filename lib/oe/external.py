@@ -1,5 +1,7 @@
 import os.path
 import re
+import shlex
+import subprocess
 import oe.path
 import bb
 
@@ -8,9 +10,10 @@ def run(d, cmd, *args):
     topdir = d.getVar('TOPDIR')
     toolchain_path = d.getVar('EXTERNAL_TOOLCHAIN')
     if toolchain_path:
-        target_prefix = d.getVar('EXTERNAL_TARGET_SYS') + '-'
-        path = os.path.join(toolchain_path, 'bin', target_prefix + cmd)
-        args = [path] + list(args)
+        target_cmd = d.getVar('EXTERNAL_TARGET_SYS') + '-' + cmd
+        toolchain_bin = d.getVar('EXTERNAL_TOOLCHAIN_BIN')
+        path = os.path.join(toolchain_bin, target_cmd)
+        args = shlex.split(path) + list(args)
 
         try:
             output, _ = bb.process.run(args, cwd=topdir)
@@ -56,8 +59,6 @@ def gather_pkg_files(d):
 def copy_from_sysroots(pathnames, sysroots, mirrors, installdest):
     '''Copy the specified files from the specified sysroots, also checking the
     specified mirror patterns as alternate paths, to the specified destination.'''
-    import subprocess
-
     expanded_pathnames = expand_paths(pathnames, mirrors)
     searched_paths = search_sysroots(expanded_pathnames, sysroots)
     for path, files in searched_paths:
