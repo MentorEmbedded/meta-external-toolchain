@@ -116,15 +116,21 @@ glibc_external_do_install_extra () {
 
     # Work around localedef failures for non-precompiled
     for locale in bo_CN bo_IN; do
-        sed -i -e '/^name_fmt\s/s/""/"???"/' "${D}${datadir}/i18n/locales/$locale"
-        if grep -q '^name_fmt.*""' "${D}${datadir}/i18n/locales/$locale"; then
-            bbfatal "sed did not fix $locale"
+        if [ -e "${D}${datadir}/i18n/locales/$locale" ]; then
+            sed -i -e '/^name_fmt\s/s/""/"???"/' "${D}${datadir}/i18n/locales/$locale"
+            if grep -q '^name_fmt.*""' "${D}${datadir}/i18n/locales/$locale"; then
+                bbfatal "sed did not fix $locale"
+            fi
         fi
     done
 
     # Avoid bash dependency
-    sed -e '1s#bash#sh#; s#$"#"#g' -i "${D}${bindir}/ldd"
-    sed -e '1s#bash#sh#' -i "${D}${bindir}/tzselect"
+    if [ -e "${D}${bindir}/ldd" ]; then
+        sed -e '1s#bash#sh#; s#$"#"#g' -i "${D}${bindir}/ldd"
+    fi
+    if [ -e "${D}${bindir}/tzselect" ]; then
+        sed -e '1s#bash#sh#' -i "${D}${bindir}/tzselect"
+    fi
 }
 
 bberror_task-install () {
