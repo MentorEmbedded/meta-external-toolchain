@@ -70,6 +70,8 @@ FILES_MIRRORS = "\
     ${prefix}/|${base_prefix}/\n \
 "
 
+EXTERNAL_CC ?= "${EXTERNAL_TARGET_SYS}-gcc"
+
 def external_run(d, *args):
     """Convenience wrapper"""
     if (not d.getVar('TCMODE', True).startswith('external') or
