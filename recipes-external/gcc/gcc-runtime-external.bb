@@ -23,7 +23,7 @@ FILES_MIRRORS =. "\
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/|${external_libroot}/\n \
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/|/lib/gcc/${EXTERNAL_TARGET_SYS}/${BINV}/include/ \n \
     ${libdir}/gcc/${TARGET_SYS}/|${libdir}/gcc/${EXTERNAL_TARGET_SYS}/\n \
-    ${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}${HEADERS_MULTILIB_SUFFIX}/\n \
+    ${@'${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}${HEADERS_MULTILIB_SUFFIX}/\n' if d.getVar('HEADERS_MULTILIB_SUFFIX') != 'UNKNOWN' else ''} \
     ${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}/\n \
 "
 
@@ -36,14 +36,16 @@ do_install_extra () {
 
     # Clear out the unused c++ header multilibs
     multilib="${HEADERS_MULTILIB_SUFFIX}"
-    for path in ${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/*; do
-        case ${path##*/} in
-            ${multilib#/})
-                mv -v "$path/"* "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/"
-                ;;
-        esac
-        rm -rfv "$path"
-    done
+    if [ "$multilib" != "UNKNOWN" ]; then
+        for path in ${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/*; do
+            case ${path##*/} in
+                ${multilib#/})
+                    mv -v "$path/"* "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/"
+                    ;;
+            esac
+            rm -rfv "$path"
+        done
+    fi
 }
 
 FILES_${PN}-dbg += "${datadir}/gdb/python/libstdcxx"
