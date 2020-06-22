@@ -14,8 +14,12 @@ FILES_${PN} = "${libdir}/libnsl*.so.* ${libdir}/libnsl-*.so"
 FILES_${PN}-dev = "${libdir}/libnsl.so ${includedir}/rpcsvc/nis*.h ${includedir}/rpcsvc/yp*.h"
 FILES_${PN}-staticdev = "${libdir}/libnsl.a"
 
-libc_rdep = "${@'${PREFERRED_PROVIDER_virtual/libc}' if '${PREFERRED_PROVIDER_virtual/libc}' else '${TCLIBC}'}"
+libc_rdep = "${@'${PREFERRED_PROVIDER_virtual/libc}' if d.getVar('PREFERRED_PROVIDER_virtual/libc') else '${TCLIBC}'}"
 RDEPENDS_${PN} += "${libc_rdep}"
+
+# Default to avoid parsing issue
+PREFERRED_PROVIDER_libtirpc ?= "libtirpc"
+RDEPENDS_${PN} += "${PREFERRED_PROVIDER_libtirpc}"
 
 do_install_extra () {
     # Depending on whether this comes from the standalone libnsl2 or glibc, the
