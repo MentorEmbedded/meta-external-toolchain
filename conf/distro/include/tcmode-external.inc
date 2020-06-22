@@ -18,7 +18,7 @@ PREFERRED_PROVIDER_glibc ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libc ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libintl ?= "glibc-external"
 PREFERRED_PROVIDER_virtual/libiconv ?= "glibc-external"
-PREFERRED_PROVIDER_virtual/crypt ?= "glibc-external"
+PREFERRED_PROVIDER_virtual/crypt ?= "libxcrypt-external"
 PREFERRED_PROVIDER_gdb-cross-${TARGET_ARCH} ?= "gdb-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_oprofile ??= "oprofile"
 # Work around bug where the implicitly created mlprefix preference isn't being

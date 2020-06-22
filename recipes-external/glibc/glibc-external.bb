@@ -17,8 +17,7 @@ DEPENDS += "virtual/${TARGET_PREFIX}binutils"
 PROVIDES += "glibc \
              virtual/libc \
              virtual/libintl \
-             virtual/libiconv \
-             virtual/crypt"
+             virtual/libiconv"
 
 def get_external_libc_license(d):
     errnosearch = os.path.join(d.getVar('includedir', True), 'errno.h')
@@ -43,8 +42,6 @@ LICENSE := "${@get_external_libc_license(d)}"
 
 require recipes-external/glibc/glibc-sysroot-setup.inc
 require recipes-external/glibc/glibc-package-adjusted.inc
-
-libc_baselibs += "${base_libdir}/libcrypt*.so.* ${base_libdir}/libcrypt-*.so"
 
 FILES_MIRRORS .= "\
     ${base_sbindir}/|/usr/bin/ \n\
