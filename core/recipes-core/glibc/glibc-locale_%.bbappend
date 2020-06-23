@@ -1,5 +1,12 @@
 INHIBIT_PACKAGE_DEBUG_SPLIT_tcmode-external = "1"
 
+# Toolchain shipped binaries weren't necessarily built ideally
+WARN_QA_remove = "ldflags textrel"
+ERROR_QA_remove = "ldflags textrel"
+
+# Debug files may well have already been split out, or stripped out
+INSANE_SKIP_${PN} += "already-stripped"
+
 # localedef needs libgcc & libc
 localedef_depends_tcmode-external = "${MLPREFIX}libgcc:do_packagedata virtual/${MLPREFIX}libc:do_packagedata"
 
