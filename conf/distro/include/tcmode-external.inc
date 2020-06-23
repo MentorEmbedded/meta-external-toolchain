@@ -3,6 +3,16 @@ EXTERNAL_TOOLCHAIN ?= "UNDEFINED"
 EXTERNAL_TARGET_SYS ??= "${TARGET_ARCH}-${TARGET_OS}"
 EXTERNAL_TOOLCHAIN_BIN ??= "${EXTERNAL_TOOLCHAIN}/bin"
 
+# External toolchain features.
+#
+#   locale-utf8-is-default: assume en_US is utf8, not en_US.UTF-8, as is the
+#                           case for OE.
+EXTERNAL_TOOLCHAIN_FEATURES ?= ""
+
+python () {
+    oe.utils.features_backfill("EXTERNAL_TOOLCHAIN_FEATURES", d)
+}
+
 # Prefer our recipes which extract files from the external toolchain
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc ?= "gcc-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate ?= "gcc-external-cross-${TARGET_ARCH}"
