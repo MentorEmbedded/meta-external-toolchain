@@ -53,7 +53,8 @@ FILES_MIRRORS .= "\
 python do_install () {
     bb.build.exec_func('external_toolchain_do_install', d)
     bb.build.exec_func('glibc_external_do_install_extra', d)
-    bb.build.exec_func('adjust_locale_names', d)
+    if not bb.utils.contains('EXTERNAL_TOOLCHAIN_FEATURES', 'locale-utf8-is-default', True, False, d):
+        bb.build.exec_func('adjust_locale_names', d)
     # sentinel
 }
 
