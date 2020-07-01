@@ -81,6 +81,8 @@ def exttc_sanity_run(cmd, d, generate_events, cwd='/'):
     import subprocess
     try:
         return subprocess.check_output(cmd, stderr=subprocess.STDOUT, cwd=cwd)
+    except FileNotFoundError:
+        raise_exttc_sanity_error('\n  Command: %s\n  Exit Code: 127\n  Output: no such file or directory' % cmd, d, generate_events)
     except subprocess.CalledProcessError as exc:
         if not isinstance(cmd, str):
             cmd = subprocess.list2cmdline(cmd)
