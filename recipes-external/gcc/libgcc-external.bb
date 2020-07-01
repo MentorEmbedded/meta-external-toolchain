@@ -24,8 +24,34 @@ FILES_${PN}-dev = "${base_libdir}/libgcc_s.so \
 INSANE_SKIP_${PN}-dev += "staticdev"
 FILES_${PN}-dbg += "${base_libdir}/.debug/libgcc_s.so.*.debug"
 
+FILES_MIRRORS =. "\
+    ${libdir}/${EXTERNAL_TARGET_SYS}/${BINV}/|${external_libroot}/\n \
+    ${libdir}/${EXTERNAL_TARGET_SYS}/|${libdir}/gcc/${EXTERNAL_TARGET_SYS}/\n \
+"
+
+# Follow any symlinks in the libroot (multilib build) to the main
+# libroot and include any symlinks there that link to our libroot.
+python () {
+    import pathlib
+
+    def get_links(p):
+        return (c for c in p.iterdir() if c.is_symlink())
+
+    libroot = d.getVar('EXTERNAL_TOOLCHAIN_LIBROOT')
+    if libroot != 'UNKNOWN':
+        sysroot = d.getVar('EXTERNAL_TOOLCHAIN_SYSROOT')
+        libroot = pathlib.Path(libroot)
+        for child in get_links(libroot):
+            link_dest = child.resolve(strict=True)
+            for other_child in get_links(link_dest):
+                if other_child.resolve() == libroot.resolve():
+                    relpath = other_child.relative_to(sysroot)
+                    d.appendVar('SYSROOT_DIRS', ' /' + str(relpath.parent))
+                    d.appendVar(d.expand('FILES_${PN}-dev'), ' /' + str(relpath))
+}
+
 do_install_extra () {
-    if [ -e "${D}${libdir}/${EXTERNAL_TARGET_SYS}" ]; then
+    if [ -e "${D}${libdir}/${EXTERNAL_TARGET_SYS}" ] && [ -z "${MLPREFIX}" ]; then
         if ! [ -e "${D}${libdir}/${TARGET_SYS}" ]; then
             ln -s "${EXTERNAL_TARGET_SYS}" "${D}${libdir}/${TARGET_SYS}"
         fi
