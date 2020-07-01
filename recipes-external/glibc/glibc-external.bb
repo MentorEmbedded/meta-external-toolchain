@@ -206,6 +206,11 @@ FILES_${PN}-dev += "${libdir}/*crt*.o"
 linux_include_subdirs = "asm asm-generic bits drm linux mtd rdma sound sys video"
 FILES_${PN}-dev += "${@' '.join('${includedir}/%s' % d for d in '${linux_include_subdirs}'.split())}"
 
+# Already multilib headers for oe sdks
+libc_baselibs_dev += "\
+    ${includedir}/fpu_control-*.h \
+    ${includedir}/ieee754-*.h \
+"
 libc_baselibs_dev += "${@' '.join('${libdir}/' + os.path.basename(l.replace('${SOLIBS}', '${SOLIBSDEV}')) for l in '${libc_baselibs}'.replace('${base_libdir}/ld*${SOLIBS}', '').split() if l.endswith('${SOLIBS}'))}"
 FILES_${PN}-staticdev = "\
     ${@'${libc_baselibs_dev}'.replace('${SOLIBSDEV}', '.a')} \
