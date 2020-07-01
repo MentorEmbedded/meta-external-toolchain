@@ -73,7 +73,7 @@ python () {
     if not bb.utils.to_boolean(d.getVar('EXTERNAL_AUTO_PROVIDE', d)):
         return
 
-    sysroots, mirrors = oe.external.get_file_search_metadata(d)
+    sysroots, mirrors, premirrors = oe.external.get_file_search_metadata(d)
     search_patterns = []
     pattern = d.getVar('EXTERNAL_PROVIDE_PATTERN', True)
     if pattern:
@@ -82,7 +82,7 @@ python () {
         files = oe.external.gather_pkg_files(d)
         search_patterns.extend(filter(lambda f: '.debug' not in f, files))
 
-    expanded = oe.external.expand_paths(search_patterns, mirrors)
+    expanded = oe.external.expand_paths(search_patterns, mirrors, premirrors)
     paths = oe.external.search_sysroots(expanded, sysroots)
     if not any(f for p, f in paths):
         raise bb.parse.SkipPackage('No files found in external toolchain sysroot for: {}'.format(', '.join(search_patterns)))
@@ -118,9 +118,9 @@ def external_toolchain_propagate_mode (d, installdest):
 python external_toolchain_do_install () {
     import subprocess
     installdest = d.getVar('D', True)
-    sysroots, mirrors = oe.external.get_file_search_metadata(d)
+    sysroots, mirrors, premirrors = oe.external.get_file_search_metadata(d)
     files = oe.external.gather_pkg_files(d)
-    oe.external.copy_from_sysroots(files, sysroots, mirrors, installdest)
+    oe.external.copy_from_sysroots(files, sysroots, mirrors, premirrors, installdest)
     if 'do_install_extra' in d:
         bb.build.exec_func('do_install_extra', d)
     external_toolchain_propagate_mode(d, installdest)

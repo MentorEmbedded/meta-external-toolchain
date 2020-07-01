@@ -59,6 +59,8 @@ EXTERNAL_INSTALL_SOURCE_PATHS = "\
 "
 
 # Potential locations within the external toolchain sysroot
+FILES_PREMIRRORS ?= ""
+
 FILES_MIRRORS = "\
     ${bindir}/|/usr/${baselib}/bin/\n \
     ${base_libdir}/|/usr/${baselib}/\n \
