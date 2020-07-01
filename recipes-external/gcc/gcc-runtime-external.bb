@@ -27,10 +27,32 @@ FILES_MIRRORS =. "\
     ${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}/\n \
 "
 
+# The do_install_append in gcc-runtime.inc doesn't do well if the links
+# already exist, as it causes a recursion that breaks traversal.
+python () {
+    adjusted = d.getVar('do_install_appended').replace('ln -s', 'link_if_no_dest')
+    adjusted = adjusted.replace('mkdir', 'mkdir_if_no_dest')
+    d.setVar('do_install_appended', adjusted)
+}
+
+link_if_no_dest () {
+    if ! [ -e "$2" ] && ! [ -L "$2" ]; then
+        ln -s "$1" "$2"
+    fi
+}
+
+mkdir_if_no_dest () {
+    if ! [ -e "$1" ] && ! [ -L "$1" ]; then
+        mkdir "$1"
+    fi
+}
+
 do_install_extra () {
     if [ "${TARGET_SYS}" != "${EXTERNAL_TARGET_SYS}" ]; then
-        if [ -d "${D}${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}" ]; then
-            mv -v "${D}${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}/." "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/"
+        if [ -e "${D}${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}" ]; then
+            if ! [ -e "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}" ]; then
+                mv -v "${D}${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}/." "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/"
+            fi
         fi
     fi
 
