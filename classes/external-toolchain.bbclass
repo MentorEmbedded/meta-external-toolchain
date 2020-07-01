@@ -150,8 +150,7 @@ WARN_QA_remove = "ldflags textrel"
 ERROR_QA_remove = "ldflags textrel"
 
 # Debug files may well have already been split out, or stripped out
-WARN_QA_remove = "already-stripped"
-ERROR_QA_remove = "already-stripped"
+INSANE_SKIP_${PN} += "already-stripped"
 
 RPROVIDES_${PN} += "${EXTERNAL_PN}"
 RPROVIDES_${PN}-dev += "${EXTERNAL_PN}-dev"
