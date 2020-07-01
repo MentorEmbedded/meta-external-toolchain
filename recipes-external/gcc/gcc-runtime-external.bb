@@ -48,10 +48,10 @@ mkdir_if_no_dest () {
 }
 
 do_install_extra () {
-    if [ "${TARGET_SYS}" != "${EXTERNAL_TARGET_SYS}" ]; then
+    if [ "${TARGET_SYS}" != "${EXTERNAL_TARGET_SYS}" ] && [ -z "${MLPREFIX}" ]; then
         if [ -e "${D}${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}" ]; then
             if ! [ -e "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}" ]; then
-                mv -v "${D}${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}/." "${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/"
+                ln -s ${EXTERNAL_TARGET_SYS} ${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}
             fi
         fi
     fi
