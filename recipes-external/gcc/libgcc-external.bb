@@ -23,3 +23,21 @@ FILES_${PN}-dev = "${base_libdir}/libgcc_s.so \
                    "
 INSANE_SKIP_${PN}-dev += "staticdev"
 FILES_${PN}-dbg += "${base_libdir}/.debug/libgcc_s.so.*.debug"
+
+do_install_extra () {
+    if [ -e "${D}${libdir}/${EXTERNAL_TARGET_SYS}" ]; then
+        if ! [ -e "${D}${libdir}/${TARGET_SYS}" ]; then
+            ln -s "${EXTERNAL_TARGET_SYS}" "${D}${libdir}/${TARGET_SYS}"
+        fi
+    fi
+}
+
+do_package[prefuncs] += "add_sys_symlink"
+
+python add_sys_symlink () {
+    import pathlib
+    target_sys = pathlib.Path(d.expand('${D}${libdir}/${TARGET_SYS}'))
+    if target_sys.exists():
+        pn = d.getVar('PN')
+        d.appendVar('FILES_%s-dev' % pn, ' ${libdir}/${TARGET_SYS}')
+}
