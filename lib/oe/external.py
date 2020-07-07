@@ -18,10 +18,11 @@ def run(d, cmd, *args):
         path = os.path.join(toolchain_bin, cmd)
         args = shlex.split(path) + list(args)
 
+        bb.debug(1, 'oe.external.run({})'.format(repr(args)))
         try:
             output, _ = bb.process.run(args, cwd=topdir)
         except bb.process.CmdError as exc:
-            bb.debug(1, str(exc))
+            bb.debug(1, 'oe.external.run: {} failed: {}'.format(subprocess.list2cmdline(args), exc))
         else:
             return output
 
@@ -66,7 +67,7 @@ def copy_from_sysroots(pathnames, sysroots, mirrors, installdest):
     searched_paths = search_sysroots(expanded_pathnames, sysroots)
     for path, files in searched_paths:
         if not files:
-            bb.debug(1, 'Failed to find `{}`'.format(path))
+            bb.debug(1, 'oe.external: failed to find `{}`'.format(path))
         else:
             destdir = oe.path.join(installdest, os.path.dirname(path))
             bb.utils.mkdirhier(destdir)
