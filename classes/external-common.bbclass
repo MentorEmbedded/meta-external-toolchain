@@ -109,4 +109,5 @@ def external_get_kernel_version(p):
                 b = (code >> 8) & 0xFF
                 return '%d.%d' % (a, b)
 
+    bb.debug(1, 'external-common.bbclass: failed to find kernel version header in {}'.format(p))
     return ''
