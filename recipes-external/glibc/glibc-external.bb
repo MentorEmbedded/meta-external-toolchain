@@ -17,7 +17,8 @@ DEPENDS += "virtual/${TARGET_PREFIX}binutils"
 PROVIDES += "glibc \
              virtual/libc \
              virtual/libintl \
-             virtual/libiconv"
+             virtual/libiconv \
+             linux-libc-headers"
 
 def get_external_libc_license(d):
     errnosearch = os.path.join(d.getVar('includedir', True), 'errno.h')
@@ -237,3 +238,8 @@ do_packagedata[depends] += "gcc-runtime:do_packagedata"
 
 FILES_${PN}-dev_remove = "${base_libdir}/*_nonshared.a ${libdir}/*_nonshared.a"
 FILES_${PN}-dev += "${libdir}/libc_nonshared.a ${libdir}/libpthread_nonshared.a ${libdir}/libmvec_nonshared.a"
+
+RPROVIDES_${PN} += "linux-libc-headers"
+RPROVIDES_${PN}-dev += "linux-libc-headers-dev"
+RPROVIDES_${PN}-dbg += "linux-libc-headers-dbg"
+RDEPENDS_${PN}-dev_remove = "linux-libc-headers"

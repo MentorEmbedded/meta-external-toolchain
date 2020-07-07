@@ -19,6 +19,7 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate ?= "gcc-external-cro
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ ?= "gcc-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils ?= "binutils-external-cross-${TARGET_ARCH}"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs ?= "gcc-runtime-external"
+PREFERRED_PROVIDER_linux-libc-headers = "glibc-external"
 PREFERRED_PROVIDER_gcc-runtime = "gcc-runtime-external"
 PREFERRED_PROVIDER_gcc-sanitizers ?= "gcc-sanitizers-external"
 PREFERRED_PROVIDER_libgcc-initial = "libgcc-external"
