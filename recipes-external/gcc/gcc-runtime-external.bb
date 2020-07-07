@@ -17,13 +17,12 @@ python () {
 }
 
 target_libdir = "${libdir}"
-HEADERS_MULTILIB_SUFFIX ?= "${@external_run(d, 'gcc', *('${TARGET_CC_ARCH}'.split() + ['-print-sysroot-headers-suffix'])).rstrip()}"
 external_libroot = "${@os.path.realpath('${EXTERNAL_TOOLCHAIN_LIBROOT}').replace(os.path.realpath('${EXTERNAL_TOOLCHAIN}') + '/', '/')}"
 FILES_MIRRORS =. "\
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/|${external_libroot}/\n \
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/|/lib/gcc/${EXTERNAL_TARGET_SYS}/${BINV}/include/ \n \
     ${libdir}/gcc/${TARGET_SYS}/|${libdir}/gcc/${EXTERNAL_TARGET_SYS}/\n \
-    ${@'${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}${HEADERS_MULTILIB_SUFFIX}/\n' if d.getVar('HEADERS_MULTILIB_SUFFIX') != 'UNKNOWN' else ''} \
+    ${@'${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}${EXTERNAL_HEADERS_MULTILIB_SUFFIX}/\n' if d.getVar('EXTERNAL_HEADERS_MULTILIB_SUFFIX') != 'UNKNOWN' else ''} \
     ${includedir}/c\+\+/${GCC_VERSION}/${TARGET_SYS}/|${includedir}/c++/${GCC_VERSION}/${EXTERNAL_TARGET_SYS}/\n \
 "
 
@@ -57,7 +56,7 @@ do_install_extra () {
     fi
 
     # Clear out the unused c++ header multilibs
-    multilib="${HEADERS_MULTILIB_SUFFIX}"
+    multilib="${EXTERNAL_HEADERS_MULTILIB_SUFFIX}"
     if [ "$multilib" != "UNKNOWN" ]; then
         for path in ${D}${includedir}/c++/${GCC_VERSION}/${TARGET_SYS}/*; do
             case ${path##*/} in

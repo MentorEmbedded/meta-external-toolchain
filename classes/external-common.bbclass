@@ -46,6 +46,7 @@ def fixed_oe_import(d, modules=None):
 EXTERNAL_IMPORTED := "${@fixed_oe_import(d, ['oe.external'])}"
 
 EXTERNAL_TOOLCHAIN_SYSROOT ?= "${@external_run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-sysroot'])).rstrip()}"
+EXTERNAL_HEADERS_MULTILIB_SUFFIX ?= "${@external_run(d, 'gcc', *('${TARGET_CC_ARCH}'.split() + ['-print-sysroot-headers-suffix'])).rstrip()}"
 EXTERNAL_TOOLCHAIN_LIBROOT ?= "${@external_run(d, 'gcc', *(TARGET_CC_ARCH.split() + ['-print-file-name=crtbegin.o'])).rstrip().replace('/crtbegin.o', '')}"
 EXTERNAL_LIBC_KERNEL_VERSION ?= "${@external_get_kernel_version("${EXTERNAL_TOOLCHAIN_SYSROOT}${prefix}")}"
 
