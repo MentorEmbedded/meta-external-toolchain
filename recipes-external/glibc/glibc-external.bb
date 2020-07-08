@@ -22,25 +22,26 @@ PROVIDES += "glibc \
              linux-libc-headers-dev"
 
 def get_external_libc_license(d):
-    errnosearch = os.path.join(d.getVar('includedir', True), 'errno.h')
-    found = oe.external.find_sysroot_files([errnosearch], d)
-    if found:
-        errno_paths = found[0]
-        if errno_paths:
-            with open(errno_paths[0], 'rU') as f:
-                text = f.read()
+    if (d.getVar('TCMODE', True).startswith('external') and
+            d.getVar('EXTERNAL_TOOLCHAIN', True)):
+        errnosearch = os.path.join(d.getVar('includedir', True), 'errno.h')
+        found = oe.external.find_sysroot_files([errnosearch], d)
+        if found:
+            errno_paths = found[0]
+            if errno_paths:
+                with open(errno_paths[0], 'rU') as f:
+                    text = f.read()
 
-            lictext = """   The GNU C Library is free software; you can redistribute it and/or
+                lictext = """   The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version."""
-
-            if lictext in text:
-                return 'LGPL-2.1+'
+                if lictext in text:
+                    return 'LGPL-2.1+'
 
     return 'UNKNOWN'
 
-LICENSE := "${@get_external_libc_license(d)}"
+LICENSE_tcmode-external := "${@get_external_libc_license(d)}"
 
 require recipes-external/glibc/glibc-sysroot-setup.inc
 require recipes-external/glibc/glibc-package-adjusted.inc
