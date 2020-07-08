@@ -48,7 +48,7 @@ EXTERNAL_IMPORTED := "${@fixed_oe_import(d, ['oe.external'])}"
 EXTERNAL_TOOLCHAIN_SYSROOT ?= "${@external_run(d, '${EXTERNAL_CC}', *(TARGET_CC_ARCH.split() + ['-print-sysroot'])).rstrip()}"
 EXTERNAL_TOOLCHAIN_LIBROOT ?= "${@external_run(d, '${EXTERNAL_CC}', *(TARGET_CC_ARCH.split() + ['-print-file-name=crtbegin.o'])).rstrip().replace('/crtbegin.o', '')}"
 EXTERNAL_HEADERS_MULTILIB_SUFFIX ?= "${@external_run(d, '${EXTERNAL_CC}', *(TARGET_CC_ARCH.split() + ['-print-sysroot-headers-suffix'])).rstrip()}"
-EXTERNAL_LIBC_KERNEL_VERSION ?= "${@external_get_kernel_version("${EXTERNAL_TOOLCHAIN_SYSROOT}${prefix}")}"
+EXTERNAL_LIBC_KERNEL_VERSION ?= "${@external_get_kernel_version(d, "${EXTERNAL_TOOLCHAIN_SYSROOT}${prefix}")}"
 
 EXTERNAL_INSTALL_SOURCE_PATHS = "\
     ${EXTERNAL_TOOLCHAIN_SYSROOT} \
@@ -83,7 +83,11 @@ def external_run(d, *args):
     import oe.external
     return oe.external.run(d, *args)
 
-def external_get_kernel_version(p):
+def external_get_kernel_version(d, p):
+    if (not d.getVar('TCMODE', True).startswith('external') or
+            not d.getVar('EXTERNAL_TOOLCHAIN', True)):
+        return 'UNKNOWN'
+
     import re
     for fn in ['include/linux/utsrelease.h', 'include/generated/utsrelease.h',
                'include/linux/version.h']:
