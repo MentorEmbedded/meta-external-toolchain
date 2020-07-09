@@ -17,5 +17,10 @@ FILES_${PN} = "${libdir}/libcrypt*.so.* \
                ${libdir}/libowcrypt*.so.* \
                ${libdir}/libowcrypt-*.so \
 "
-FILES_${PN}-dev = "${libdir}/libcrypt.so ${libdir}/libowcrypt.so"
-
+FILES_${PN}-dev = "\
+    ${libdir}/libcrypt.so \
+    ${libdir}/libowcrypt.so \
+    ${includedir}/crypt.h \
+    ${libdir}/pkgconfig/libcrypt.pc \
+    ${libdir}/pkgconfig/libxcrypt.pc \
+"
