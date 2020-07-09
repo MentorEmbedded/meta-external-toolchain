@@ -2,6 +2,7 @@ SUMMARY = "The GNU Compiler Collection - libgcc"
 HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
 DEPENDS += "virtual/${TARGET_PREFIX}binutils"
+PROVIDES += "libgcc-initial"
 PV = "${GCC_VERSION}"
 
 inherit external-toolchain
