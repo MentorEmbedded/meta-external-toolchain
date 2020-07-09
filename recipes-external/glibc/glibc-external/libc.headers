@@ -10,7 +10,6 @@ assert.h
 byteswap.h
 complex.h
 cpio.h
-crypt.h
 ctype.h
 dirent.h
 dlfcn.h
