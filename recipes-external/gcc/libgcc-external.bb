@@ -40,12 +40,13 @@ python () {
 
     libroot = d.getVar('EXTERNAL_TOOLCHAIN_LIBROOT')
     if libroot != 'UNKNOWN':
-        sysroot = d.getVar('EXTERNAL_TOOLCHAIN_SYSROOT')
-        libroot = pathlib.Path(libroot)
+        sysroot = pathlib.Path(d.getVar('EXTERNAL_TOOLCHAIN_SYSROOT')).resolve()
+        libroot = pathlib.Path(libroot).resolve()
         for child in get_links(libroot):
             link_dest = child.resolve(strict=True)
             for other_child in get_links(link_dest):
-                if other_child.resolve() == libroot.resolve():
+                other_child = other_child.resolve()
+                if other_child == libroot:
                     relpath = other_child.relative_to(sysroot)
                     d.appendVar('SYSROOT_DIRS', ' /' + str(relpath.parent))
                     d.appendVar(d.expand('FILES_${PN}-dev'), ' /' + str(relpath))
