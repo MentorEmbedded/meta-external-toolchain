@@ -19,20 +19,18 @@ INSANE_SKIP_${PN} += "build-deps file-rdeps"
 # on the target, moreover linker won't be able to find them there (see original libgcc.bb recipe).
 BINV = "${GCC_VERSION}"
 FILES_${PN} = "${base_libdir}/libgcc_s.so.*"
+LIBROOT_RELATIVE_RESOLVED = "${@os.path.relpath(os.path.realpath('${EXTERNAL_TOOLCHAIN_LIBROOT}'), '${EXTERNAL_TOOLCHAIN_SYSROOT}')}"
+LIBROOT_RELATIVE = "${@os.path.relpath('${EXTERNAL_TOOLCHAIN_LIBROOT}', '${EXTERNAL_TOOLCHAIN_SYSROOT}')}"
 FILES_${PN}-dev = "${base_libdir}/libgcc_s.so \
-                   ${libdir}/${EXTERNAL_TARGET_SYS}/${BINV}* \
-                   "
+             /${LIBROOT_RELATIVE_RESOLVED} \
+             /${LIBROOT_RELATIVE} \
+"
 INSANE_SKIP_${PN}-dev += "staticdev"
 FILES_${PN}-dbg += "${base_libdir}/.debug/libgcc_s.so.*.debug"
 
-FILES_MIRRORS =. "\
-    ${libdir}/${EXTERNAL_TARGET_SYS}/${BINV}/|${external_libroot}/\n \
-    ${libdir}/${EXTERNAL_TARGET_SYS}/|${libdir}/gcc/${EXTERNAL_TARGET_SYS}/\n \
-"
-
 # Follow any symlinks in the libroot (multilib build) to the main
 # libroot and include any symlinks there that link to our libroot.
-python () {
+python add_ml_symlink () {
     import pathlib
 
     def get_links(p):
@@ -41,16 +39,18 @@ python () {
     libroot = d.getVar('EXTERNAL_TOOLCHAIN_LIBROOT')
     if libroot != 'UNKNOWN':
         sysroot = pathlib.Path(d.getVar('EXTERNAL_TOOLCHAIN_SYSROOT')).resolve()
-        libroot = pathlib.Path(libroot).resolve()
+        libroot = pathlib.Path(libroot)
         for child in get_links(libroot):
             link_dest = child.resolve(strict=True)
             for other_child in get_links(link_dest):
-                other_child = other_child.resolve()
-                if other_child == libroot:
-                    relpath = other_child.relative_to(sysroot)
+                if other_child.resolve() == libroot.resolve():
+                    other = other_child.parent.resolve() / other_child.name
+                    relpath = other.relative_to(sysroot)
                     d.appendVar('SYSROOT_DIRS', ' /' + str(relpath.parent))
-                    d.appendVar(d.expand('FILES_${PN}-dev'), ' /' + str(relpath))
+                    d.appendVar('FILES_${PN}-dev', ' /' + str(relpath))
 }
+add_ml_symlink[eventmask] = "bb.event.RecipePreFinalise"
+addhandler add_ml_symlink
 
 do_install_extra () {
     if [ -e "${D}${libdir}/${EXTERNAL_TARGET_SYS}" ] && [ -z "${MLPREFIX}" ]; then
