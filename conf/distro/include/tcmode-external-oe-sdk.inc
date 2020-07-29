@@ -36,7 +36,7 @@ python extract_env_setup_metadata() {
                 else:
                     setup = setups[0]
 
-        env = parse_setup_script(setups[0])
+        env = parse_setup_script(setup)
         target_sys = env.get('TARGET_PREFIX')[:-1]
         native_sysroot = pathlib.Path(env.get('OECORE_NATIVE_SYSROOT'))
 
