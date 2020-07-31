@@ -57,12 +57,6 @@ def setup_external_vars(external_toolchain, d):
 
     d.setVar('EXTERNAL_TARGET_SYS' + suffix, str(target_sys))
     d.setVar('EXTERNAL_TOOLCHAIN_BIN' + suffix, str(native_sysroot / 'usr' / 'bin' / target_sys))
-    # In OE multilib configurations, gcc may be a symlink. Resolve it to
-    # determine the real target sys from gcc's perspective.
-    # external_bin = native_sysroot / 'usr' / 'bin' / target_sys
-    # d.setVar('EXTERNAL_TOOLCHAIN_BIN', str(external_bin.resolve()))
-    # gcc = external_bin / (target_sys + "-gcc")
-    # d.setVar('EXTERNAL_TARGET_SYS', gcc.resolve().name[:-4])
     d.setVar('EXTERNAL_TOOLCHAIN_SYSROOT' + suffix, str(target_sysroot))
 
 # These are treated as prefixes to items in PACKAGE_ARCHS at this time.
