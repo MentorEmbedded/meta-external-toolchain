@@ -31,10 +31,16 @@ FILES_${PN}-dbg += "${base_libdir}/.debug/libgcc_s.so.*.debug"
 # Follow any symlinks in the libroot (multilib build) to the main
 # libroot and include any symlinks there that link to our libroot.
 python add_ml_symlink () {
+    pass
+}
+python add_ml_symlink_tcmode-external () {
     import pathlib
 
     def get_links(p):
         return (c for c in p.iterdir() if c.is_symlink())
+
+    if not d.getVar('EXTERNAL_TOOLCHAIN'):
+        return
 
     libroot = d.getVar('EXTERNAL_TOOLCHAIN_LIBROOT')
     if libroot != 'UNKNOWN':
