@@ -89,13 +89,13 @@ def select_appropriate_setup_script(d, external_toolchain):
     for setup in setups:
         setup_env = parse_setup_script(setup)
         if target_arch != setup_get(setup_env, 'OECORE_TARGET_ARCH'):
-            bb.debug(1, "tcmode-external-sourcery: TARGET_ARCH `{}` doesn't match `{}` in `{}`".format(target_arch, setup_get(setup_env, 'OECORE_TARGET_ARCH'), setup))
+            bb.debug(1, "tcmode-external-oe-sdk: TARGET_ARCH `{}` doesn't match `{}` in `{}`".format(target_arch, setup_get(setup_env, 'OECORE_TARGET_ARCH'), setup))
             continue
         if target_os != setup_get(setup_env, 'OECORE_TARGET_OS'):
-            bb.debug(1, "tcmode-external-sourcery: TARGET_OS `{}` doesn't match `{}` in `{}`".format(target_os, setup_get(setup_env, 'OECORE_TARGET_OS'), setup))
+            bb.debug(1, "tcmode-external-oe-sdk: TARGET_OS `{}` doesn't match `{}` in `{}`".format(target_os, setup_get(setup_env, 'OECORE_TARGET_OS'), setup))
             continue
         if baselib != setup_get(setup_env, 'OECORE_BASELIB'):
-            bb.debug(1, "tcmode-external-sourcery: BASELIB `{}` doesn't match `{}` in `{}`".format(baselib, setup_get(setup_env, 'OECORE_BASELIB'), setup))
+            bb.debug(1, "tcmode-external-oe-sdk: BASELIB `{}` doesn't match `{}` in `{}`".format(baselib, setup_get(setup_env, 'OECORE_BASELIB'), setup))
             continue
 
         setup_tune_pkgarch = setup_env.get('TUNE_PKGARCH')
@@ -109,7 +109,7 @@ def select_appropriate_setup_script(d, external_toolchain):
                             compatible = True
 
                 if not compatible:
-                    bb.debug(1, "tcmode-external-sourcery: skipping incompatible {}: TUNE_PKGARCH `{}` not found in PACKAGE_ARCHS `{}`".format(setup, setup_tune_pkgarch, package_archs))
+                    bb.debug(1, "tcmode-external-oe-sdk: skipping incompatible {}: TUNE_PKGARCH `{}` not found in PACKAGE_ARCHS `{}`".format(setup, setup_tune_pkgarch, package_archs))
                     continue
         candidates.append((setup, setup_env))
 
@@ -127,18 +127,18 @@ def get_setup_script_env(external_toolchain, d):
         if not candidates:
             setup = None
         elif len(candidates) > 1:
-            bb.fatal("tcmode-external-sourcery: multiple candidate setup scripts found, please specify with EXTERNAL_TOOLCHAIN_SETUP_SCRIPT: {}".format(" ".join(candidates)))
+            bb.fatal("tcmode-external-oe-sdk: multiple candidate setup scripts found, please specify with EXTERNAL_TOOLCHAIN_SETUP_SCRIPT: {}".format(" ".join(candidates)))
         else:
             setup, env = candidates[0]
-            bb.debug(1, "tcmode-external-sourcery: selected setup script {}".format(setup))
+            bb.debug(1, "tcmode-external-oe-sdk: selected setup script {}".format(setup))
 
     if not setup:
-        bb.fatal('tcmode-external-sourcery: failed to determine setup script path for sdk at {}, please set EXTERNAL_TOOLCHAIN_SETUP_SCRIPT to the full path to the environment setup script.'.format(external_toolchain))
+        bb.fatal('tcmode-external-oe-sdk: failed to determine setup script path for sdk at {}, please set EXTERNAL_TOOLCHAIN_SETUP_SCRIPT to the full path to the environment setup script.'.format(external_toolchain))
     return setup, env
 
 def setup_get(setup, field):
     if not field in setup:
-        bb.fatal("tcmode-external-sourcery: no variable `{}` found in `{}`".format(field, setup))
+        bb.fatal("tcmode-external-oe-sdk: no variable `{}` found in `{}`".format(field, setup))
     return setup[field]
 
 def parse_setup_script(setup):
