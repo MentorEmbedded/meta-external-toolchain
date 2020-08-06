@@ -20,7 +20,7 @@ python extract_env_setup_metadata() {
 
     external_toolchain = Path(d.getVar('EXTERNAL_TOOLCHAIN'))
     if external_toolchain.is_absolute() and external_toolchain.is_dir():
-        setup_external_vars(external_toolchain, d)
+        setup_external_vars(external_toolchain, d, d)
 
         localdata = bb.data.createCopy(d)
         variants = d.getVar('MULTILIB_VARIANTS') or ''
@@ -29,17 +29,17 @@ python extract_env_setup_metadata() {
             overrides = d.getVar('OVERRIDES', False) + ':virtclass-multilib-' + item
             localdata.setVar('OVERRIDES', overrides)
             localdata.setVar('MLPREFIX', item + '-')
-            setup_external_vars(external_toolchain, localdata)
+            setup_external_vars(external_toolchain, localdata, d)
 }
 extract_env_setup_metadata[eventmask] = "bb.event.ConfigParsed"
 addhandler extract_env_setup_metadata
 
-def setup_external_vars(external_toolchain, d):
+def setup_external_vars(external_toolchain, localdata, d):
     from pathlib import Path
 
-    setup, env = get_setup_script_env(external_toolchain, d)
+    setup, env = get_setup_script_env(external_toolchain, localdata)
 
-    mlprefix = d.getVar('MLPREFIX')
+    mlprefix = localdata.getVar('MLPREFIX')
     if mlprefix:
         suffix = '_virtclass-multilib-' + mlprefix[:-1]
     else:
