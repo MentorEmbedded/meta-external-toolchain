@@ -12,6 +12,8 @@ EXTERNAL_TOOLCHAIN_SYSROOT = "${EXTERNAL_TOOLCHAIN}/sysroots/${EXTERNAL_MULTIMAC
 EXTERNAL_CC = "${EXTERNAL_TARGET_SYS}-gcc --sysroot=${EXTERNAL_TOOLCHAIN_SYSROOT}"
 EXTERNAL_TOOLCHAIN_FEATURES_append = " locale-utf8-is-default"
 
+EXTERNAL_SETUP_SCRIPT_VARS ?= ""
+
 # Our headers are already multilib
 oe_multilib_header_pn-glibc-external = ":"
 
@@ -46,6 +48,9 @@ def setup_external_vars(external_toolchain, localdata, d):
         suffix = ''
 
     d.setVar('EXTERNAL_TOOLCHAIN_SETUP_SCRIPT' + suffix, str(setup))
+
+    for var in localdata.getVar('EXTERNAL_SETUP_SCRIPT_VARS').split():
+        d.setVar('EXTERNAL_' + var + suffix, env.get(var) or '')
 
     target_sys = env.get('TARGET_PREFIX')[:-1]
     native_sysroot = Path(env.get('OECORE_NATIVE_SYSROOT'))
