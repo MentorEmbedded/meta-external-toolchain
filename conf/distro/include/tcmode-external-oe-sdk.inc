@@ -157,7 +157,13 @@ def parse_setup_script(setup):
     for line in value.splitlines():
         if line.split():
             split = shlex.split(line)
-            if split and split[0] == 'export':
-                k, v = split[1].split('=', 1)
-                values[k] = v
+            if len(split) == 2 and split[0] == 'export':
+                split = split[1:]
+            if len(split) == 1:
+                try:
+                    k, v = split[0].split('=', 1)
+                except ValueError:
+                    continue
+                else:
+                    values[k] = v
     return values
