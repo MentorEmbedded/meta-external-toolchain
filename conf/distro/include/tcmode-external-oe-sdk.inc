@@ -47,8 +47,6 @@ def setup_external_vars(external_toolchain, localdata, d):
     else:
         suffix = ''
 
-    d.setVar('EXTERNAL_TOOLCHAIN_SETUP_SCRIPT' + suffix, str(setup))
-
     for var in localdata.getVar('EXTERNAL_SETUP_SCRIPT_VARS').split():
         d.setVar('EXTERNAL_' + var + suffix, env.get(var) or '')
 
