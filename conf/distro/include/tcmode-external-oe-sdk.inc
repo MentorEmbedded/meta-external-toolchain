@@ -17,12 +17,15 @@ EXTERNAL_SETUP_SCRIPT_VARS ?= ""
 # Our headers are already multilib
 oe_multilib_header_pn-glibc-external = ":"
 
+EXTERNAL_TOOLCHAINS ??= "${EXTERNAL_TOOLCHAIN}"
+
 python extract_env_setup_metadata() {
     from pathlib import Path
 
-    external_toolchain = Path(d.getVar('EXTERNAL_TOOLCHAIN'))
-    if external_toolchain.is_absolute() and external_toolchain.is_dir():
-        setup_external_vars(external_toolchain, d, d)
+    paths = [Path(p) for p in d.getVar('EXTERNAL_TOOLCHAINS').split()]
+    paths = [p for p in paths if p.is_absolute() and p.is_dir()]
+    if paths:
+        setup_external_vars(paths, d, d)
 
         localdata = bb.data.createCopy(d)
         variants = d.getVar('MULTILIB_VARIANTS') or ''
@@ -31,21 +34,23 @@ python extract_env_setup_metadata() {
             overrides = d.getVar('OVERRIDES', False) + ':virtclass-multilib-' + item
             localdata.setVar('OVERRIDES', overrides)
             localdata.setVar('MLPREFIX', item + '-')
-            setup_external_vars(external_toolchain, localdata, d)
+            setup_external_vars(paths, localdata, d)
 }
 extract_env_setup_metadata[eventmask] = "bb.event.ConfigParsed"
 addhandler extract_env_setup_metadata
 
-def setup_external_vars(external_toolchain, localdata, d):
+def setup_external_vars(paths, localdata, d):
     from pathlib import Path
 
-    setup, env = get_setup_script_env(external_toolchain, localdata)
+    setup, env = get_setup_script_env(paths, localdata)
 
     mlprefix = localdata.getVar('MLPREFIX')
     if mlprefix:
         suffix = '_virtclass-multilib-' + mlprefix[:-1]
     else:
         suffix = ''
+
+    d.setVar('EXTERNAL_TOOLCHAIN' + suffix, str(setup.parent))
 
     for var in localdata.getVar('EXTERNAL_SETUP_SCRIPT_VARS').split():
         d.setVar('EXTERNAL_' + var + suffix, env.get(var) or '')
@@ -70,13 +75,16 @@ def setup_external_vars(external_toolchain, localdata, d):
 # the armv7ve PACKAGE_ARCHS.
 EXTERNAL_TOOLCHAIN_ARCH_COMPAT[armv7ve] += "armv7a"
 
-def select_appropriate_setup_script(d, external_toolchain):
+def select_appropriate_setup_script(d, paths):
+    from itertools import chain
+    from pathlib import Path
+
     candidates = []
 
     tune_pkgarch = d.getVar('TUNE_PKGARCH')
-    arch_setups = list(external_toolchain.glob('environment-setup-' + tune_pkgarch + '-*'))
+    arch_setups = list(chain.from_iterable(Path(path).glob('environment-setup-' + tune_pkgarch + '-*') for path in paths))
     if arch_setups:
-        # Exact match
+        # Exact match, skip processing
         for setup in arch_setups:
             setup_env = parse_setup_script(setup)
             candidates.append((setup, setup_env))
@@ -88,7 +96,7 @@ def select_appropriate_setup_script(d, external_toolchain):
     package_archs = d.getVar('PACKAGE_ARCHS').split()
 
     arch_compat = d.getVarFlags('EXTERNAL_TOOLCHAIN_ARCH_COMPAT')
-    setups = external_toolchain.glob('environment-setup-*')
+    setups = chain.from_iterable(Path(path).glob('environment-setup-*') for path in paths)
     for setup in setups:
         setup_env = parse_setup_script(setup)
         if target_arch != setup_get(setup_env, 'OECORE_TARGET_ARCH'):
@@ -118,7 +126,7 @@ def select_appropriate_setup_script(d, external_toolchain):
 
     return candidates
 
-def get_setup_script_env(external_toolchain, d):
+def get_setup_script_env(paths, d):
     from pathlib import Path
 
     setup = d.getVar('EXTERNAL_TOOLCHAIN_SETUP_SCRIPT')
@@ -126,7 +134,7 @@ def get_setup_script_env(external_toolchain, d):
         setup = Path(setup)
         env = parse_setup_script(setup)
     else:
-        candidates = select_appropriate_setup_script(d, external_toolchain)
+        candidates = select_appropriate_setup_script(d, paths)
         if not candidates:
             setup = None
         elif len(candidates) > 1:
@@ -136,7 +144,7 @@ def get_setup_script_env(external_toolchain, d):
             bb.debug(1, "tcmode-external-oe-sdk: selected setup script {}".format(setup))
 
     if not setup:
-        bb.fatal('tcmode-external-oe-sdk: failed to determine setup script path for sdk at {}, please set EXTERNAL_TOOLCHAIN_SETUP_SCRIPT to the full path to the environment setup script.'.format(external_toolchain))
+        bb.fatal('tcmode-external-oe-sdk: failed to determine setup script path for sdk, please set EXTERNAL_TOOLCHAIN_SETUP_SCRIPT to the full path to the environment setup script.')
     return setup, env
 
 def setup_get(setup, field):
